@@ -28,47 +28,27 @@ const appActions = {
       return rpc.reboot(session);
     });
   },
+
   loadModel: (session) => {
     return rpc.loadModel(session);
   },
-  setWifi: (mode, content, session) => {
-    if (mode === 'apsta') {
-      return rpc.setWifi('sta', content.ssid, content.key, session)
-      .then(() => {
-        return rpc.setWifi('ap', content.repeaterSsid, content.repeaterKey, session);
-      });
+
+  setWifi: (section, ssid, key, session) => {
+    let disabled = 1;
+    let mode = 'ap';
+    if (section === 'station') {
+      mode = 'sta';
+      disabled = 0;
     }
-    return rpc.setWifi(mode, content.ssid, content.key, session);
+    return rpc.changeWifiMode(disabled, session)
+    .then(() => {
+      return rpc.setWifi(mode, ssid, key, session);
+    });
   },
-  setWifiMode: (mode, session) => {
-    let network = 'lan';
-    let ignore = 1;
-    let proto = 'dhcp';
-
-    if (mode !== 'apsta') {
-      network = 'wan';
-      ignore = 0;
-      proto = 'static';
-    }
-
-    return rpc.setWifiMode(mode, session)
+  setRFN: (serverIP, serverPort, channel, session) => {
+    return rpc.setRFN(serverIP, serverPort, channel, session)
     .then(() => {
-      return rpc.setWifiNetworkConfig(network, session);
-    })
-    .then(() => {
-      return rpc.uciCommit('wireless', session);
-    })
-    .then(() => {
-      return rpc.setWifiIgnoreConfig(ignore, session);
-    })
-    .then(() => {
-      return rpc.uciCommit('dhcp', session);
-    })
-    .then(() => {
-      return rpc.setWifiProtoConfig(proto, session);
-    })
-    .then(() => {
-      return rpc.uciCommit('network', session);
+      return rpc.commitWifi(session);
     });
   },
   scanWifi: (session) => {
@@ -89,6 +69,18 @@ const appActions = {
   loadSystem: (session) => {
     return rpc.loadSystem(session);
   },
+  loadRFN: (session) => {
+    return rpc.loadRFN(session);
+  },
+  resetServerIP: (hostname, session) => {
+    return rcp.resetServerIP(hostname, session);
+  },
+  resetServerPort: (port, session) => {
+    return rcp.resetServerPort(port, session);
+  },
+  resetChannel: (channel, session) => {
+    return rcp.resetChannel(channel, session);
+  },
   initialFetchData: (session) => {
     return promise.delay(10).then(() => {
       return [
@@ -97,15 +89,17 @@ const appActions = {
         rpc.loadNetwork(session),
         rpc.loadNetstate('lan', session),
         rpc.loadNetstate('wan', session),
+	rpc.loadRFN(session),
       ];
     })
-    .spread((system, wifi, network, lan, wan) => {
+    .spread((system, wifi, network, lan, wan, rfn) => {
       const boardInfo = {};
       boardInfo.system = system.body.result[1].values;
       boardInfo.wifi = wifi.body.result[1].values;
       boardInfo.network = network.body.result[1].values;
       boardInfo.lan = lan.body.result[1];
       boardInfo.wan = wan.body.result[1];
+      boardInfo.rfn = rfn.body.result[1].values;
       return boardInfo;
     })
     .then((boardInfo) => {

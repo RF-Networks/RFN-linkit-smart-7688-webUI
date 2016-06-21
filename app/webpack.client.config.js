@@ -6,9 +6,10 @@ import I18nPlugin from 'i18n-webpack-plugin';
 const ISPRODUCTION = process.env.NODE_ENV === 'production';
 const languages = {
   en: null,
-  'zh-cn': require('./locale/zh-cn'),
-  'zh-tw': require('./locale/zh-tw'),
+  'ru-ru': require('./locale/ru-RU'),
+  'zh-tw': require('./locale/zh-TW'),
 };
+// 'zh-cn': require('./locale/zh-CN'),
 
 module.exports = Object.keys(languages).map((language) => {
   let devtool = 'source-map';

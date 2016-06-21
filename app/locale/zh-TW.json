@@ -42,6 +42,7 @@
   "This action will remove all your data and settings from the device. You cannot undo this action.": "這個動作會移除您在設備上的資料和設定, 您將不可恢復。",
   "System information": "系統資訊",
   "Network": "網路",
+  "Configuration": "Configuration",
   "Network name": "網路名稱",
   "Network setting": "網路設定",
   "Network mode": "網路模式",
@@ -78,5 +79,10 @@
   "The Firmware Is Uploaded And Flashing. Please Note:": "韌體上傳完成,  正在燒錄中。 您將會看到:",
   "The Wi-Fi LED will blink 3 times per second when the board is connected to a client device.": "Wi-Fi 連接完成後, Wi-Fi LED會呈現每秒閃3 次狀態。",
   "The device is still in the restarting process. Please retry again when the restarting process is complete.": "系統正在重新啟動中，請於系統啟動完成後再重新設置密碼。",
-  "Please make sure your host computer is in the same network as the device. You can’t access this page if it’s in a different network.": "請確保您的主機與設備在相同網路中，否則您將不能訪問此頁面。"
+  "Please make sure your host computer is in the same network as the device. You can’t access this page if it’s in a different network.": "請確保您的主機與設備在相同網路中，否則您將不能訪問此頁面。",
+  "Server ip": "Server IP address",
+  "Server port": "Server port",
+  "Configuration saved.": "Configuration saved.",
+  "Device settings": "Device settings",
+  "Channel": "Channel"
 }

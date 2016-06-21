@@ -17,7 +17,7 @@ const styles = {
   },
 
   img: {
-    width: '130px',
+    width: '93px',
     marginTop: '15px',
   },
 
@@ -53,9 +53,9 @@ export default class loginComponent extends React.Component {
     super(props);
     this.state = {};
     this._logOut = this._logOut.bind(this);
-    if (/zh\-tw/.test(window.location.pathname)) {
+    if (/ru\-ru/.test(window.location.pathname)) {
       this.state.language = '2';
-    } else if (/zh\-cn/.test(window.location.pathname)) {
+    } else if (/zh\-tw/.test(window.location.pathname)) {
       this.state.language = '3';
     } else {
       this.state.language = '1';
@@ -71,10 +71,10 @@ export default class loginComponent extends React.Component {
   componentWillMount() {
     ThemeManager.setComponentThemes({
       textField: {
-        borderColor: Colors.amber700,
+        borderColor: Colors.green700,
       },
       menuItem: {
-        selectedTextColor: Colors.amber700,
+        selectedTextColor: Colors.green700,
       },
     });
   }
@@ -82,7 +82,7 @@ export default class loginComponent extends React.Component {
   render() {
     const menuItems = [
       { payload: '1', text: 'English' },
-      { payload: '2', text: '繁體中文' },
+      { payload: '2', text: 'Русский' },
       { payload: '3', text: '简体中文' },
     ];
 
@@ -106,10 +106,10 @@ export default class loginComponent extends React.Component {
                   (e, sel)=> {
                     switch (sel) {
                     case 1:
-                      window.location.href = defaultRouter + '/zh-tw.html';
+                      window.location.href = defaultRouter + '/ru-ru.html';
                       break;
                     case 2:
-                      window.location.href = defaultRouter + '/zh-cn.html';
+                      window.location.href = defaultRouter + '/zh-tw.html';
                       break;
                     default:
                       window.location.href = defaultRouter + '/';
@@ -118,14 +118,14 @@ export default class loginComponent extends React.Component {
                   }
                 }
                 labelStyle={{
-                  color: Colors.amber700,
+                  color: Colors.green700,
                   lineHeight: '60px',
                   fontSize: '16px' }}
                 underlineStyle={{ border: '0px' }}/>
               <a
                 onTouchTap={ this._logOut }
                 style={{
-                  color: Colors.amber700,
+                  color: Colors.green700,
                   textDecoration: 'none',
                   cursor: 'pointer',
                 }}>{ __('Sign out') }</a>

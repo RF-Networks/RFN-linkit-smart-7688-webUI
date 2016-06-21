@@ -3,6 +3,7 @@ import Radium from 'radium';
 import mui from 'material-ui';
 import Sysinfo from './sysinfo.jsx';
 import Network from './network.jsx';
+import RFNetwork from './rfn.jsx';
 import AppActions from '../actions/appActions';
 
 const { Tabs, Tab } = mui;
@@ -66,6 +67,7 @@ export default class contentComponent extends React.Component {
     super(props);
     this._handleTabsChangeNetWork = ::this._handleTabsChangeNetWork;
     this._handleTabsChangeSYS = ::this._handleTabsChangeSYS;
+    this._handleTabsChangeRFN = ::this._handleTabsChangeRFN;
     this.state = {
       tabsValue: 'sysinfo',
       boardModel: '',
@@ -90,7 +92,7 @@ export default class contentComponent extends React.Component {
     return (
       <div key="mainBlock" style={ styles.block }>
         <header style={ styles.header }>
-          <p style={ styles.welcomeTitle } key="welcome">{ __('Welcome to') } <b>{ this.state.boardModel }</b></p>
+          <p style={ styles.welcomeTitle } key="welcome">{ __('Welcome to') } <b>RFN Gateway</b></p>
           <p style={[ styles.welcomeTitle, styles.welcomeTitleLine ]} key="advanced">
             {
               __('For advanced network configuration, go to ')
@@ -100,7 +102,7 @@ export default class contentComponent extends React.Component {
         <Tabs
           valueLink={{ value: this.state.tabsValue }}
           tabItemContainerStyle={{
-            backgroundColor: Colors.amber700,
+            backgroundColor: Colors.green700,
             borderRadius: '5px 5px 0px 0px',
           }}
           inkBarStyle={{
@@ -119,6 +121,12 @@ export default class contentComponent extends React.Component {
             onClick={ ::this._handleTabsChangeNetWork }>
             <Network boardInfo={ this.props.boardInfo } />
           </Tab>
+          <Tab
+            label={ __('Configuration') }
+            value="rfn"
+            onClick={ ::this._handleTabsChangeRFN }>
+            <RFNetwork boardInfo={ this.props.boardInfo } />
+          </Tab>
         </Tabs>
       </div>
     );
@@ -130,6 +138,10 @@ export default class contentComponent extends React.Component {
 
   _handleTabsChangeSYS() {
     this.setState({ tabsValue: 'sysinfo' });
+  }
+
+  _handleTabsChangeRFN() {
+    this.setState({ tabsValue: 'rfn' });
   }
 }
 
