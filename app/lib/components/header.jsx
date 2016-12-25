@@ -17,7 +17,7 @@ const styles = {
   },
 
   img: {
-    width: '93px',
+    width: '130px',
     marginTop: '15px',
   },
 
@@ -83,7 +83,7 @@ export default class loginComponent extends React.Component {
     const menuItems = [
       { payload: '1', text: 'English' },
       { payload: '2', text: 'Русский' },
-      { payload: '3', text: '简体中文' },
+      { payload: '3', text: '繁體中文' },
     ];
 
     let defaultRouter = '';

@@ -111,7 +111,7 @@ export default class resetPasswordComponent extends React.Component {
             ref="password"
             value="root (default)"
             disabled
-            underlineFocusStyle={{ borderColor: Colors.green700 }}
+            underlineFocusStyle={{ borderColor: Colors.amber700 }}
             style={ styles.basicWidth }
             floatingLabelStyle={{ color: 'rgba(0, 0, 0, 0.498039)' }}
             required
@@ -121,8 +121,8 @@ export default class resetPasswordComponent extends React.Component {
             hintText={ __('Please set a password') }
             type={ textType }
             floatingLabelStyle={{ color: 'rgba(0, 0, 0, 0.498039)' }}
-            underlineFocusStyle={{ borderColor: Colors.green700 }}
-            errorStyle={{ borderColor: Colors.green700 }}
+            underlineFocusStyle={{ borderColor: Colors.amber700 }}
+            errorStyle={{ borderColor: Colors.amber700 }}
             style={ styles.basicWidth }
             required
             minLength="6"
@@ -153,7 +153,7 @@ export default class resetPasswordComponent extends React.Component {
               }
               style={{
                 textAlign: 'left',
-                color: Colors.green700,
+                color: Colors.amber700,
                 textDecoration: 'none',
                 cursor: 'pointer',
                 fontSize: '14px',
@@ -163,7 +163,7 @@ export default class resetPasswordComponent extends React.Component {
             linkButton
             secondary
             label={ __('Submit') }
-            backgroundColor={ Colors.green700 }
+            backgroundColor={ Colors.amber700 }
             onTouchTap={ this._handleResetPassword }
             style={ styles.basicWidth } />
         </div>

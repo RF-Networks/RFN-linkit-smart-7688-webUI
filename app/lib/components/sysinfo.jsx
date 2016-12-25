@@ -105,7 +105,6 @@ export default class sysinfoComponent extends React.Component {
     this.state.boardModel = '';
 
     const info = JSON.parse(localStorage.getItem('info'));
-
     if (this.props.boardInfo) {
       this.state.deviceName = this.props.boardInfo.system[Object.keys(this.props.boardInfo.system)[0]].hostname;
       this.state.user = info.user;
@@ -113,19 +112,21 @@ export default class sysinfoComponent extends React.Component {
       this.state.bootLoaderVersion = this.props.boardInfo.system[Object.keys(this.props.boardInfo.system)[0]].loader_version;
       this.state.firmwareVersion = this.props.boardInfo.system[Object.keys(this.props.boardInfo.system)[0]].firmware_version;
       this.state.macaddr = this.props.boardInfo.network.lan.macaddr;
-      if (this.props.boardInfo.network.lan.macaddr)
-          this.state.wifiMACName = this.props.boardInfo.network.lan.macaddr.split(':')[3] + this.props.boardInfo.network.lan.macaddr.split(':')[4] + this.props.boardInfo.network.lan.macaddr.split(':')[5];
-      if (this.props.boardInfo.wifi.sta.disabled === '1') {
-        this.state.mode = 'ap';
-	if (this.props.boardInfo.lan['ipv4-address'])
-            this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
-      } else {
-        this.state.mode = 'station';
-        
-	if (this.props.boardInfo.wan['ipv4-address'])
-            this.state.currentIp = this.props.boardInfo.wan['ipv4-address'][0].address;
-	else if (this.props.boardInfo.lan['ipv4-address'])
-            this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
+      this.state.wifiMACName = this.props.boardInfo.network.lan.macaddr.split(':')[3] + this.props.boardInfo.network.lan.macaddr.split(':')[4] + this.props.boardInfo.network.lan.macaddr.split(':')[5];
+      this.state.mode = this.props.boardInfo.wifi.radio0.linkit_mode;
+
+      switch (this.state.mode) {
+      case 'ap':
+        this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
+        break;
+      case 'sta':c
+        this.state.currentIp = (this.props.boardInfo.wan['ipv4-address'])? this.props.boardInfo.wan['ipv4-address'][0].address : this.props.boardInfo.lan['ipv4-address'][0].address;
+        break;
+      case 'apsta':
+        this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
+        break;
+      default:
+        break;
       }
     }
 
@@ -274,8 +275,7 @@ export default class sysinfoComponent extends React.Component {
         marginBottom: '44px',
       };
     }
-
-    if (this.state.boardModel === 'MediaTek LinkIt Smart7688') {
+    if (this.state.boardModel === 'MediaTek LinkIt Smart 7688') {
       boardImg = icon7688;
     } else {
       boardImg = icon7688Duo;

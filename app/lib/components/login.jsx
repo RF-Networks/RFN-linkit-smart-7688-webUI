@@ -159,7 +159,7 @@ export default class loginComponent extends React.Component {
               lineHeight: '22px',
               marginTop: '40px',
               fontFamily: 'RionaSansLight,Arial,Helvetica,sans-serif',
-            }}><span style={{fontFamily: 'RionaSansLight,Arial,Helvetica,sans-serif'}}>{__('Welcome to')}</span> <b style={{ fontFamily: 'RionaSansMedium,Arial,Helvetica,sans-serif' }}>RFN Gateway</b>.</p>
+            }}><span style={{fontFamily: 'RionaSansLight,Arial,Helvetica,sans-serif'}}>{__('Welcome to')}</span> <b style={{ fontFamily: 'RionaSansMedium,Arial,Helvetica,sans-serif' }}>LinkIt Smart 7688</b>.</p>
             <h3 style={ styles.panelTitle }>{__('Account')}</h3>
             <p style={ styles.panelContent }>root(default)</p>
             <TextField
@@ -167,7 +167,7 @@ export default class loginComponent extends React.Component {
               type={ textType }
               floatingLabelStyle={{ color: 'rgba(0, 0, 0, 0.498039)' }}
               underlineFocusStyle={{ borderColor: Colors.green700 }}
-              style={[styles.basicWidth, { marginTop: '-10px' }]}
+              style={{ marginTop: '-10px', ...styles.basicWidth}}
               onChange={
                 (e)=> {
                   this.setState({ password: e.target.value });
@@ -225,7 +225,7 @@ export default class loginComponent extends React.Component {
   }
 
   _handleLogin() {
-    const password = this.state.password;
+    const password = this.state.password; 
     return AppActions.login('root', password);
   }
 }

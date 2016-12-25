@@ -9,7 +9,6 @@ const languages = {
   'ru-ru': require('./locale/ru-RU'),
   'zh-tw': require('./locale/zh-TW'),
 };
-// 'zh-cn': require('./locale/zh-CN'),
 
 module.exports = Object.keys(languages).map((language) => {
   let devtool = 'source-map';
