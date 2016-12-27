@@ -119,7 +119,7 @@ export default class sysinfoComponent extends React.Component {
       case 'ap':
         this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
         break;
-      case 'sta':c
+      case 'sta':
         this.state.currentIp = (this.props.boardInfo.wan['ipv4-address'])? this.props.boardInfo.wan['ipv4-address'][0].address : this.props.boardInfo.lan['ipv4-address'][0].address;
         break;
       case 'apsta':
