@@ -7,13 +7,13 @@ This is the web configuration panel and REST api provider you find running on yo
 - First, clone the project.
 
 ```bash
-$ git clone https://github.com/MediaTek-Labs/linkit-smart-7688-webUI.git
+$ git clone https://github.com/RF-Networks/RFN-linkit-smart-7688-webUI.git
 ```
 
-- Second, open linkit-smart-7688-webUI
+- Second, open RFN-linkit-smart-7688-webUI
 
 ``` bash
-cd ./linkit-smart-7688-webUI
+cd ./RFN-linkit-smart-7688-webUI
 ```
 
 - Copy `/app/build/` folder to linkit smart's path: `/www/`
@@ -39,7 +39,7 @@ npm: 2.9.0
 
 - First, clone the project.
 ```bash
-$ git clone https://github.com/MediaTek-Labs/linkit-smart-webUI.git
+$ git clone https://github.com/RF-Networks/RFN-linkit-smart-7688-webUI.git
 ```
 
 - Second, install Dependency.
