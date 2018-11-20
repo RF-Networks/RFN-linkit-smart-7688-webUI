@@ -17,7 +17,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import AppActions from '../actions/appActions';
 import AppDispatcher from '../dispatcher/appDispatcher';
-import Logo from '../../img/rf-networks.jpg';
+import Logo from '../../img/rf-networks.png';
 
 const styles = theme => ({
   frame: {

@@ -6,7 +6,7 @@ import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/
 import green from '@material-ui/core/colors/green';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Logo from '../../img/rf-networks.jpg';
+import Logo from '../../img/rf-networks.png';
 import AppActions from '../actions/appActions';
 import AppDispatcher from '../dispatcher/appDispatcher';
 
