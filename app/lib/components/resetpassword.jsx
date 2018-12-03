@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -15,7 +15,7 @@ import appAction from '../actions/appActions';
 import AppDispatcher from '../dispatcher/appDispatcher';
 import Logo from '../../img/rf-networks.png';
 
-const styles = theme => ({
+const styles = props => ({
   frame: {
     display: 'flex',
     height: '100%',
@@ -57,7 +57,6 @@ const styles = theme => ({
   },
 });
 
-
 const theme = createMuiTheme({
   palette: {
     primary: green,
@@ -67,7 +66,6 @@ const theme = createMuiTheme({
   },
 });
 
-
 @Radium
 class resetPasswordComponent extends React.Component {
   static propTypes = {
@@ -75,11 +73,11 @@ class resetPasswordComponent extends React.Component {
     errorMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     successMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   }
-
+  
   constructor(props) {
-    super(props);
+	super(props);
     this.classes = props;
-    this.state = {
+	this.state = {
       password: '',
       againPassword: '',
       showPassword: false,
@@ -88,12 +86,22 @@ class resetPasswordComponent extends React.Component {
       errorTitle: '',
       errorMsg: '',
     };
-    this._handleResetPassword = ::this._handleResetPassword;
+	this._handleResetPassword = this._handleResetPassword.bind(this);
   }
-
+  
+  componentDidMount() {
+	const this$ = this;
+    document.addEventListener('keypress', (e)=> {
+      const key = e.which || e.keyCode;
+      if (key === 13) { // 13 is enter
+        return this$._handleResetPassword();
+      }
+    });
+  }
+  
   render() {
-    const { classes } = this.props;
-    let errorText = __('Please set a password');
+	const { classes } = this.props;
+	let errorText = __('Please set a password');
     let textType = 'password';
     let error = false;
 
@@ -115,18 +123,18 @@ class resetPasswordComponent extends React.Component {
         marginBottom: '44px',
       };
     }
-
-    return (
+	
+	return (
       <div className={ classes.frame }>
-        <div className={ classes.block }>
-          <img src={ Logo } className={ classes.img }/>
+	    <div className={ classes.block }>
+		  <img src={ Logo } className={ classes.img }/>
           <p style={{
             lineHeight: '22px',
             marginTop: '40px',
             fontFamily: 'RionaSansLight,Arial,Helvetica,sans-serif',
           }}>{__('Welcome to')} <b>RFN Smart Gateway</b></p>
           <p style={{ color: '#69BE28', marginTop: '-10px' }}>{__('Please set a password.')}</p>
-          <TextField
+		  <TextField
             helperText={ __('Input your Account') }
             ref="password"
             value="root (default)"
@@ -177,12 +185,12 @@ class resetPasswordComponent extends React.Component {
               onClick={ this._handleResetPassword }>
               { __('Submit') }
             </Button>
-        </div>
-      </div>    
+	    </div>    
+	  </div>
     );
   }
-
-  _handleResetPassword() {
+  
+   _handleResetPassword() {
     const password = this.state.password;
 
     if (password.length < 6) {
@@ -207,7 +215,7 @@ class resetPasswordComponent extends React.Component {
 }
 
 resetPasswordComponent.childContextTypes = {
-  muiTheme: PropTypes.object,
+  classes: PropTypes.object,
 };
 
-export default withStyles(styles)(resetPasswordComponent);
+export default withStyles(styles, { withTheme: true })(resetPasswordComponent);

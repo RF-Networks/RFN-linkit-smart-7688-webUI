@@ -78,9 +78,6 @@ const styles = props => ({
 const theme = createMuiTheme({
   palette: {
     primary: green,
-    secondary: {
-      main: '#ffffff',
-    },
   },
   typography: {
     useNextVariants: true,
@@ -156,4 +153,4 @@ sysinfoComponent.childContextTypes = {
   classes: PropTypes.object,
 };
 
-export default withTheme()(withStyles(styles)(sysinfoComponent));
+export default withStyles(styles, { withTheme: true })(sysinfoComponent);

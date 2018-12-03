@@ -16,29 +16,10 @@ if (AppActions.isLocalStorageNameSupported) {
 
 if (window.session) {
   console.log("Has session");
-  rpc.default.grantCode(window.session)
-  .then(() => {
-    console.log("grantCode OK");
-    return AppActions.initialFetchData(window.session);
-  })
-  .catch(() => {
-    if (AppActions.isLocalStorageNameSupported) {
-      delete window.localStorage.session;
-      delete window.localStorage.info;
-    } else {
-      delete window.memoryStorage.session;
-      delete window.memoryStorage.info;
-    }
-    return AppDispatcher.dispatch({
-      APP_PAGE: 'LOGIN',
-      successMsg: null,
-      errorMsg: 'Timeout',
-    });
-  });
 } else {
   rpc.default.login('root', '')
   .then((data) => {
-    const session = data.body.result[1].ubus_rpc_session;
+	const session = data.body.result[1].ubus_rpc_session;
     window.session = session;
     return AppDispatcher.dispatch({
       APP_PAGE: 'FIRSTLOGIN',
@@ -46,7 +27,7 @@ if (window.session) {
       errorMsg: null,
     });
   }).catch((err) => {
-    console.log("Login error: %s", err);
+	console.log("Login error: %s", err);
     switch (err) {
       case 'Connection failed':
         return AppDispatcher.dispatch({
@@ -97,9 +78,8 @@ AppDispatcher.register((action) => {
   APP_PAGE.errorMsg = action.errorMsg || null;
   APP_PAGE.successMsg = action.successMsg || null;
   APP_PAGE.boardInfo = action.boardInfo || null;
-
   switch (action.APP_PAGE) {
-    case AppConstants.FIRSTLOGIN:
+	case AppConstants.FIRSTLOGIN:
       APP_PAGE.APP_PAGE = AppConstants.FIRSTLOGIN;
       appStore.emitChange();
       break;
@@ -111,7 +91,7 @@ AppDispatcher.register((action) => {
       APP_PAGE.APP_PAGE = AppConstants.CONTENT;
       appStore.emitChange();
       break;
-    default:
+	default:
       break;
   }
 });

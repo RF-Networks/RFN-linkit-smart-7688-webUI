@@ -19,7 +19,7 @@ import AppActions from '../actions/appActions';
 import AppDispatcher from '../dispatcher/appDispatcher';
 import Logo from '../../img/rf-networks.png';
 
-const styles = theme => ({
+const styles = props => ({
   frame: {
     display: 'flex',
     height: '100%',
@@ -89,7 +89,7 @@ const theme = createMuiTheme({
 
 @Radium
 class loginComponent extends React.Component {
-  static propTypes = {
+	static propTypes = {
     classes: PropTypes.object.isRequired,
     errorMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     successMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
@@ -105,7 +105,7 @@ class loginComponent extends React.Component {
       successMsg: this.props.successMsg,
     };
 
-    this._handleLogin = ::this._handleLogin;
+    this._handleLogin = this._handleLogin.bind(this);
   }
 
   componentDidMount() {
@@ -251,7 +251,7 @@ class loginComponent extends React.Component {
 }
 
 loginComponent.childContextTypes = {
-  muiTheme: PropTypes.object,
+  classes: PropTypes.object,
 };
 
-export default withStyles(styles)(loginComponent);
+export default withStyles(styles, { withTheme: true })(loginComponent);

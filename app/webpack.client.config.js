@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -12,225 +10,104 @@ const languages = {
 };
 
 module.exports = Object.keys(languages).map((language) => {
-  let devtool = 'source-map';
-
-  let plugins = [
-    new ExtractTextPlugin('[name].css'),
-    new HtmlWebpackPlugin(),
-    new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new I18nPlugin(languages[language]),
-  ];
-
-  let mode = 'development';
-
-  if (ISPRODUCTION) {
-    devtool = false;
-    mode = 'production';
-  } else {
-    plugins = plugins.concat(new webpack.HotModuleReplacementPlugin());
-  }
-
-  const config = {
-    name: language,
-    mode: mode,
-    entry: path.join(__dirname, '/lib/app.jsx'),
-    output: {
-      publicPath: 'http://127.0.0.1:8081/build/',
-      path: path.join(__dirname, '/build/'),
-      filename: language + '.app.js',
-    },
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    },
-    module: {
-      rules: [
-        {
-          exclude: /node_modules/,
-          test: /\.jsx?$/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-                plugins: [ 
-                  "react-hot-loader/babel", 
-                  "transform-class-properties",
-                  "transform-decorators-legacy",
-                ],
-                babelrc: false,
-                presets: [ 'react', 'stage-0' ],
-                ignore: [ 'node_modules' ]
+	let devtool = 'source-map';
+	
+	let plugins = [
+	  new ExtractTextPlugin('[name].css'),
+	  new HtmlWebpackPlugin(),
+	  new webpack.NamedModulesPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
+	  new I18nPlugin(languages[language]),
+	];
+	
+	let mode = 'development';
+	
+	if (ISPRODUCTION) {
+      devtool = false;
+      mode = 'production';
+    } else {
+      plugins = plugins.concat(new webpack.HotModuleReplacementPlugin());
+    }
+	
+	const config = {
+	  name: language,
+      mode: mode,
+      entry: path.join(__dirname, '/lib/app.jsx'),
+      output: {
+        publicPath: 'http://127.0.0.1:8081/build/',
+        path: path.join(__dirname, '/build/'),
+        filename: language + '.app.js',
+      },
+      resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      },
+	  module: {
+		 rules: [
+          {
+            exclude: /node_modules/,
+            test: /\.jsx?$/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                  plugins: [ 
+				    "react-hot-loader/babel", 
+					["@babel/plugin-proposal-decorators", { "legacy": true }],
+					"@babel/plugin-proposal-class-properties"
+                  ],
+                  babelrc: false,
+                  presets: [ '@babel/env', '@babel/react' ],
+                  ignore: [ 'node_modules' ]
+              },
             },
           },
-        },
-        {
-            test: /\.css$/,
-            loader: ['style-loader', 'css-loader']
-        },
-        {
-            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
-        },
-        {
-            test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
-        },
-        {
-            test: /\.svg\?v=[0-9]\.[0-9]\.[0-9]$/,
-            loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
-        },
-        {
-            test: /\.(svg|png|jpg|jpeg)$/,
-            loader: 'url-loader?limit=10000&name=[name].[ext]'
-        },
-        {
-          test: /\.json$/,
-          use: {
-            loader: 'json',
-          }
-        }
-      ],
-    },
-    plugins: plugins,
-    devtool: devtool,
-    node: {
-      __dirname: true,
-    },
-  };
-  if (ISPRODUCTION) {
-    config.output.publicPath = '/build/';
-  }
-  return config;
-});
-
-module.exports.output = {
-  publicPath: 'http://127.0.0.1:8081/build/',
-};
-
-module.exports.devServer = {};
-/*
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const I18nPlugin = require('i18n-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-
-const ISPRODUCTION = process.env.NODE_ENV === 'production';
-const languages = {
-  en: null,
-};
-
-module.exports = Object.keys(languages).map((language) => {
-  let devtool = 'source-map';
-  let plugins = [
-    new ExtractTextPlugin('[name].css'),
-    new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({ 'global.GENTLY': false }),
-    new I18nPlugin(languages[language]),
-  ];
-  
-  if (ISPRODUCTION) {
-    devtool = false;
-    plugins = plugins.concat([
-      //new webpack.optimize.UglifyJsPlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin(),
-      //new webpack.optimize.DedupePlugin(),
-    ]);
-  } else {
-    plugins = plugins.concat(new webpack.HotModuleReplacementPlugin());
-  }
-  const config = {
-    name: language,
-    entry: path.join(__dirname, '/lib/app.jsx'),
-    output: {
-      publicPath: 'http://127.0.0.1:8081/build/',
-      path: path.join(__dirname, '/build/'),
-      filename: language + '.app.js',
-    },
-    module: {
-      rules: [
-        {
-          test: /\.jsx?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader?stage=0',
-            options: {
-              plugins: [ ],
-              babelrc: false,
-              presets: [ 'react', 'stage-0' ],
-              ignore: [ 'node_modules' ]
+          {
+              test: /\.css$/,
+              loader: ['style-loader', 'css-loader']
+          },
+          {
+              test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
+          },
+          {
+              test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
+          },
+          {
+              test: /\.svg\?v=[0-9]\.[0-9]\.[0-9]$/,
+              loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
+          },
+          {
+              test: /\.(svg|png|jpg|jpeg)$/,
+			  use: {
+				loader: 'url-loader',
+				options: {
+					limit: 25000,
+					name: '[name].[ext]'
+				},
+			  }
+          },
+          {
+            test: /\.json$/,
+            use: {
+              loader: 'json',
             }
           }
-        },
-      ],
-    },
-    plugins: plugins,
-    devtool: devtool,
-    node: {
-      __dirname: true,
-    },
-  };
-  if (ISPRODUCTION) {
-    config.output.publicPath = '/build/';
-  }
-  return config;
+        ],
+	  },
+	  plugins: plugins,
+      devtool: devtool,
+      node: {
+        __dirname: true,
+      },
+	};
+	
+	if (ISPRODUCTION) {
+      config.output.publicPath = '/build/';
+    }
+    return config;
 });
 
 module.exports.output = {
   publicPath: 'http://127.0.0.1:8081/build/',
 };
-
 module.exports.devServer = {};
-*/
-/*
-
-rules: [
-        {
-          resource: {
-            test: /\.jsx?$/,
-            exclude: [
-              path.resolve(__dirname, 'node_modules'), 
-              path.resolve(__dirname, 'webpack')
-            ]
-          },
-          use: [{
-            loader: 'babel-loader',
-            options: {
-              presets: ["stage-0", "react"],
-              code: true,
-              comments: true,
-              cacheDirectory: true,
-              babelrc: false,
-            },
-          }]
-        },
-        {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
-        },
-        { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url?limit=10000&minetype=application/font-woff&name=[name].[ext]' },
-        { test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url?limit=10000&minetype=application/font-woff&name=[name].[ext]' },
-        { test: /\.svg\?v=[0-9]\.[0-9]\.[0-9]$/, loader: 'url?limit=10000&minetype=application/font-woff&name=[name].[ext]' },
-        { test: /\.(svg|png|jpg|jpeg)$/, loaders: ['url?limit=10000&name=[name].[ext]'] },
-        { test: /\.json$/, loaders: ['json'] },
-      ]
-
-loaders: [
-        {
-          test: /\.jsx?$/,
-          exclude: /node_modules/,
-          loaders: ['react-hot-loader/babel', 'babel-loader?stage=0'],
-          options: { preset: ['@babel/stage-0'],}
-        },
-        {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
-        },
-        { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url?limit=10000&minetype=application/font-woff&name=[name].[ext]' },
-        { test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url?limit=10000&minetype=application/font-woff&name=[name].[ext]' },
-        { test: /\.svg\?v=[0-9]\.[0-9]\.[0-9]$/, loader: 'url?limit=10000&minetype=application/font-woff&name=[name].[ext]' },
-        { test: /\.(svg|png|jpg|jpeg)$/, loaders: ['url?limit=10000&name=[name].[ext]'] },
-        { test: /\.json$/, loaders: ['json'] },
-      ],
-*/
