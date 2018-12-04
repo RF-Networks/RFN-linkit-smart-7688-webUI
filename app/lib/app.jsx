@@ -5,6 +5,8 @@ import { hot } from 'react-hot-loader';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import { render } from 'react-dom';
 import AppConstants from './constants/appConstants.js';
+import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
 
 /* component */
 import Login from './components/login.jsx';
@@ -18,6 +20,15 @@ import AppStore from './stores/appStore.js';
 function appState() {
 	return AppStore.init();
 }
+
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+  },
+  typography: {
+    useNextVariants: true,
+  },
+});
 
 export default class App extends React.Component {
   constructor(props) {
@@ -59,9 +70,11 @@ export default class App extends React.Component {
 		  break;
 	}
 	return (
+	  <MuiThemeProvider theme={theme}>
       <div>
         {elem}
       </div>
+	  </MuiThemeProvider>
     );
   }
   

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Radium from 'radium';
-import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -29,7 +29,7 @@ const styles = props => ({
     justifyContent: 'center',
     backgroundColor: '#FAFAFA',
     alignItems: 'center',
-    '@media (max-width: 760px)': {
+    '@media (max-width: 790px)': {
       paddingLeft: '10px',
       paddingRight: '10px',
     },
@@ -38,30 +38,30 @@ const styles = props => ({
   
   welcomeTitle: {
     lineHeight: '35px',
-    '@media (max-width: 760px)': {
+    '@media (max-width: 790px)': {
       width: '100%',
     },
   },
 
   welcomeTitleLine: {
-    '@media (max-width: 760px)': {
+    '@media (max-width: 790px)': {
       marginTop: '-20px',
     },
   },
   
   content: {
-    maxWidth: '768px',
+    maxWidth: '790px',
     width: '100%',
     marginBottom: '30px',
   },
   
   header: {
-    maxWidth: '768px',
+    maxWidth: '800px',
     width: '100%',
     marginTop: '120px',
     display: 'flex',
     justifyContent: 'space-between',
-    '@media (max-width: 760px)': {
+    '@media (max-width: 790px)': {
       justifyContent: 'none',
       display: 'block',
     },

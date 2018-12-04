@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -54,15 +54,6 @@ const styles = props => ({
     '&:hover': {
       backgroundColor: green[700],
     },
-  },
-});
-
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  },
-  typography: {
-    useNextVariants: true,
   },
 });
 

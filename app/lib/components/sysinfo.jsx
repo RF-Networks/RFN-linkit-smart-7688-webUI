@@ -7,6 +7,16 @@ import green from '@material-ui/core/colors/green';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import AppActions from '../actions/appActions';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import icon7688 from '../../img/7688.png';
+import icon7688Duo from '../../img/7688_duo.png';
 
 const styles = props => ({
   h3: {
@@ -75,15 +85,6 @@ const styles = props => ({
   },
 });
 
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  },
-  typography: {
-    useNextVariants: true,
-  },
-});
-
 @Radium
 class sysinfoComponent extends React.Component {
   static propTypes = {
@@ -99,6 +100,8 @@ class sysinfoComponent extends React.Component {
     };
 
     this.state.PlatformBlockIsEdit = false;
+	this.state.showPassword = false;
+    this.state.notPassPassword = false;
     this.state.boardModel = '';
 
     const info = JSON.parse(localStorage.getItem('info'));
@@ -108,8 +111,13 @@ class sysinfoComponent extends React.Component {
       this.state.user = info.user;
       this.state.password = info.password;
 
-      this.state.currentIp = '192.168.100.1';//this.props.boardInfo.lan['ipv4-address'][0].address;
+      this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
     }
+	
+	this._editPlatformBlock = this._editPlatformBlock.bind(this);
+	this._submitPlatformBlock = this._submitPlatformBlock.bind(this);
+	this._returnToIndex = this._returnToIndex.bind(this);
+
   }
 
   componentWillMount() {
@@ -122,7 +130,33 @@ class sysinfoComponent extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-
+    let textType = 'password';
+	let showPasswordStyle = {
+      width: '100%',
+      marginBottom: '44px',
+    };
+	let errorText = '';
+	let boardImg;
+	
+	if (this.state.showPassword) {
+      textType = 'text';
+    }
+	
+	if (this.state.notPassPassword) {
+		errorText = __('Please use at least 6 alphanumeric characters.');
+		showPasswordStyle = {
+		  marginTop: '20px',
+		  width: '100%',
+		  marginBottom: '44px',
+		};
+	}
+	
+	if (this.state.boardModel === 'MediaTek LinkIt Smart 7688') {
+      boardImg = icon7688;
+    } else {
+      boardImg = icon7688Duo;
+    }
+	
     let PlatformBlock = (
       <div className={ classes.content } key="PlatformBlock">
         <h3 className={ classes.h3 }>{ __('Platform information') }</h3>    
@@ -135,17 +169,205 @@ class sysinfoComponent extends React.Component {
         <h3 className={ classes.panelTitle }>{ __('Account') }</h3>
         <p className={ classes.panelContent }>root(default)</p>
         <h3 className={ classes.panelTitle }>{ __('Password') } <b style={{ color: 'red' }}>*</b></h3>
-        <p className={ classes.panelContent }><input type="password" disable style={{ border: '0px', fontSize: '18px', letterSpacing: '3px' }}value={this.state.password} /></p>
+        <p className={ classes.panelContent }><input type="password" readOnly style={{ border: '0px', fontSize: '18px', letterSpacing: '3px' }} value={this.state.password} /></p>
+		<Button 
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            marginTop: '-20px',
+            marginBottom: '20px',
+			color: '#ffffff',
+			backgroundColor: green[500],
+			'&:hover': {
+			  backgroundColor: green[700],
+			},
+          }}
+          onClick={ () => { this._editPlatformBlock(true); } }>
+          { __('Configure') }
+        </Button>
       </div>
     );
+	
+	if (this.state.PlatformBlockIsEdit) {
+	  PlatformBlock = (
+	    <div className={ classes.content } key="PlatformBlock">
+		  <h3 className={ classes.h3 }>{ __('Platform information') }</h3>   
+		  <TextField helperText={ __('Device name') }
+		    defaultValue={ this.state.deviceName } 
+		    style={{ width: '100%' }} 
+		    onChange={
+		      (e) => { 
+			    this.setState({ deviceName: e.target.value });
+			  } 
+		    } />
+		  <h3 className={ classes.panelTitle }>{ __('Current IP address') }</h3>
+		  <p className={ classes.panelContent }>{ this.state.currentIp }</p>
+		  
+		  <h3 style={ [classes.h3Top, { marginTop: '-15px' }] }>{ __('Account information') }</h3>
+		  <h3 className={ classes.panelTitle }>{ __('Account') }</h3>
+		  <p className={ classes.panelContent }>root(default)</p>
+		  
+		  <TextField helperText={ __('Password') }
+		    style={{ width: '100%' }}
+			defaultValue={ this.state.password }
+			type={ textType }
+			helperText={ errorText }
+			required
+			minLength="6"
+			onChange={
+		      (e) => { 
+			    if (e.target.value.length < 6) {
+                  this.setState({ notPassPassword: true, password: e.target.value });
+                } else {
+                  this.setState({ password: e.target.value, notPassPassword: false });
+                }
+			  } 
+		    }
+			label= { __('Password') }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="Toggle password visibility"
+                    onClick={ () => { this.setState(state => ({ showPassword: !state.showPassword }));}}
+                  >
+                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}/>
+		  <Button 
+              style={{
+                width: '226px',
+                flexGrow: 1,
+                textAlign: 'center',
+                marginTop: '20px',
+                marginBottom: '20px',
+                marginRight: '10px',
+				color: '#ffffff',
+				backgroundColor: green[500],
+			    '&:hover': {
+			      backgroundColor: green[700],
+			    },}}
+              onClick={ () => { this._editPlatformBlock(false); } }>
+              { __('Cancel') }
+          </Button>
+		  <Button 
+              style={{
+                width: '226px',
+                flexGrow: 1,
+                textAlign: 'center',
+                marginTop: '20px',
+                marginBottom: '20px',
+                marginLeft: '10px',
+				color: '#ffffff',
+				backgroundColor: green[500],
+			    '&:hover': {
+			      backgroundColor: green[700],
+			    },}}
+              onClick={ () => { this._submitPlatformBlock(false); } }>
+              { __('Configure & Restart') }
+          </Button>
+		</div>
+	  );
+	}
 
     return (
       <div>
         <Card>
+			<Dialog
+			  aria-labelledby="simple-dialog-title"
+			  ref="boardMsgDialog"
+			  open={ false }>
+			  <DialogTitle id="simple-dialog-title">{__('Device Restarting. Please Wait…')}</DialogTitle>
+			  <div style={{
+				  display: 'flex',
+				  flexDirection: 'column',
+				  justifyContent: 'center',
+				  alignItems: 'center',
+			    }}>
+				<p style={{
+				  fontSize: '16px',
+				  color: '#999A94',
+				  lineHeight: '18.54px',
+				  margin: '-15px 10px 10px 10px',
+			    }}>{ __('See the Wi-Fi LED, it will light on steadily and start to blink or turn off afterwards. When the LED starts to blink or turn off, reload this webpage to sign in again.') }</p>
+				<img src={ boardImg } style={{ width: '350px' }} />
+			  </div>
+			</Dialog>
+		    <Dialog
+			  aria-labelledby="simple-dialog-title"
+			  ref="errorDialog"
+			  open={ false }>
+			  <DialogTitle id="simple-dialog-title">{this.state.errorMsgTitle}</DialogTitle>
+			  <p style={{ color: '#999A94', marginTop: '-20px' }}>{ this.state.errorMsg }</p>
+			</Dialog>
             { PlatformBlock }
+			<div style={{ borderTop: '1px solid rgba(0,0,0,0.12)', marginTop: '20px', marginBottom: '0px' }}></div>
         </Card>
       </div>
     );
+  }
+  
+  _editPlatformBlock(status) {
+    const this$ = this;
+    setTimeout(() => { return this$.setState({ PlatformBlockIsEdit: status }); }, 300);
+  }
+  
+  _submitPlatformBlock() {
+	const this$ = this;
+    const password = this.state.password;
+    if (password.length < 6) {
+      return false;
+    }
+	return AppActions.resetHostName(this$.state.deviceName, window.session)
+	.then(() => {
+      return AppActions.resetPassword('root', this$.state.password, window.session);
+    })
+    .then(() => {
+      return AppActions.commitAndReboot(window.session)
+      .then(() => {
+        return;
+      })
+      .catch((err) => {
+        if (err === 'no data') {
+          return false;
+        }
+        return err;
+      });
+    })
+    .then(() => {
+      return this$._returnToIndex(__('Configuration saved. You can sign in to the console after your device has restarted.'));
+    })
+    .catch((err) => {
+      if (err === 'Access denied') {
+        this$.setState({ errorMsgTitle: __('Access denied'), errorMsg: __('Your token was expired, please sign in again.') });
+        this$.refs.errorMsg.open = true;
+		return true;
+      }
+      alert(err);
+    });
+  }
+  
+  _returnToIndex(successMsg, errorMsg) {
+    if (successMsg) {
+	  this.refs.boardMsgDialog.open = true;
+      this.setState({ boardSuccessMsg: successMsg });
+    } else {
+      if (AppActions.isLocalStorageNameSupported) {
+        delete window.localStorage.session;
+        delete window.localStorage.info;
+      } else {
+        delete window.memoryStorage.session;
+        delete window.memoryStorage.info;
+      }
+
+      return AppDispatcher.dispatch({
+        APP_PAGE: 'LOGIN',
+        successMsg: successMsg || null,
+        errorMsg: errorMsg || null,
+      });
+    }
   }
 }
 

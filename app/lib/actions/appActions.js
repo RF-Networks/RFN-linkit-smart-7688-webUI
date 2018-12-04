@@ -20,6 +20,15 @@ let isLocalStorageNameSupported = false;
 const appActions = {
   isLocalStorageNameSupported: isLocalStorageNameSupported,
   
+  commitAndReboot: (session) => {
+    return rpc.default.commitWifi(session)
+    .then(() => {
+      return rpc.default.reboot(session);
+    })
+    .catch(() => {
+      return rpc.default.reboot(session);
+    });
+  },
   loadModel: (session) => {
     return rpc.default.loadModel(session);
   },
@@ -88,6 +97,9 @@ const appActions = {
     });
   },
 
+  resetHostName: (hostname, session) => {
+    return rpc.default.resetHostName(hostname, session);
+  },
   resetPassword: (user, password) => {
     return rpc.default.resetPassword(user, password, window.session);
   },
@@ -98,12 +110,14 @@ const appActions = {
   initialFetchData: (session) => {
     return promise.delay(10).then(() => {
       return [
-        rpc.default.loadSystem(session)
+        rpc.default.loadSystem(session),
+		rpc.default.loadNetstate('lan', session),
       ];
     })
-    .spread((system) => {
+    .spread((system, lan) => {
       const boardInfo = {};
       boardInfo.system = system.body.result[1].values;
+	  boardInfo.lan = lan.body.result[1];
       return boardInfo;
     })
     .then((boardInfo) => {

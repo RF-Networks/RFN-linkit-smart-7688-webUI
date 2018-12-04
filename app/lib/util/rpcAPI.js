@@ -88,6 +88,16 @@ const rpcAPI = {
   },
   // ====== login end ========
 
+  commitWifi: function(session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [session, 'uci', 'apply', { commit: true }]};
+
+    return this.request(config);
+  },
+  
   reboot: function(session) {
     const config = {
       jsonrpc: '2.0',
@@ -117,6 +127,24 @@ const rpcAPI = {
 
     return this.request(config);
   },
+  
+  loadNetstate: function(iface, session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [
+        session,
+        'network.interface',
+        'status',
+        {
+          interface: iface,
+        },
+      ],
+    };
+
+    return this.request(config);
+  },
 
   loadSystem: function(session) {
     const config = {
@@ -133,6 +161,25 @@ const rpcAPI = {
         },
       ],
     };
+    return this.request(config);
+  },
+  
+  resetHostName: function(hostname, session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [
+        session,
+        'uci',
+        'set', {
+          config: 'system',
+          section: '@system[0]',
+          values: { hostname: hostname },
+        },
+      ],
+    };
+
     return this.request(config);
   },
 };

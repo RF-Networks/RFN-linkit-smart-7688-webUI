@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Radium from 'radium';
-import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -32,9 +32,9 @@ const styles = theme => ({
     height: '105px',
     lineHeight: '60px',
     justifyContent: 'space-between',
-    maxWidth: '768px',
+    maxWidth: '800px',
     margin: '0 auto',
-    '@media (max-width: 760px)': {
+    '@media (max-width: 790px)': {
       paddingLeft: '10px',
       paddingRight: '10px',
     },
@@ -55,15 +55,6 @@ const styles = theme => ({
     fill: green[500],
   },
 });
-
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  },
-  typography: {
-    useNextVariants: true,
-  },
-});
 	
 @Radium
 class loginComponent extends React.Component {
@@ -80,9 +71,9 @@ class loginComponent extends React.Component {
 	this._logOut = this._logOut.bind(this);
 	
 	if (/ru\-ru/.test(window.location.pathname)) {
-      this.state.language = '2';
-    } else {
       this.state.language = '1';
+    } else {
+      this.state.language = '0';
     }
   }
   
@@ -118,15 +109,18 @@ class loginComponent extends React.Component {
                   if (e.target.value == this.state.language)
                     return;
                   switch (e.target.value) {
+					case 1:
+					  window.location.href = defaultRouter + '/ru-ru.html';
+					  break;
                     default:
-                    window.location.href = defaultRouter + '/';
-                    break;
+                      window.location.href = defaultRouter + '/';
+                      break;
                   }
                 }
               }
               disableUnderline={true} >
-               <MenuItem value={1} style={{backgroundColor: '#fff', color: green[500]}}>English</MenuItem>
-               <MenuItem value={2} style={{backgroundColor: '#fff', color: green[500]}}>Pусский</MenuItem>
+               <MenuItem value={0} style={{backgroundColor: '#fff', color: green[500]}}>English</MenuItem>
+               <MenuItem value={1} style={{backgroundColor: '#fff', color: green[500]}}>Pусский</MenuItem>
             </Select>
             <a
               onClick={ this._logOut }

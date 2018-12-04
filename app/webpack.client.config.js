@@ -7,6 +7,7 @@ const I18nPlugin = require('i18n-webpack-plugin');
 const ISPRODUCTION = process.env.NODE_ENV === 'production';
 const languages = {
   en: null,
+  'ru-ru': require('./locale/ru-ru'),
 };
 
 module.exports = Object.keys(languages).map((language) => {

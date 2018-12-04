@@ -15,7 +15,24 @@ if (AppActions.isLocalStorageNameSupported) {
 }
 
 if (window.session) {
-  console.log("Has session");
+  rpc.grantCode(window.session)
+  .then(() => {
+    return AppActions.initialFetchData(window.session);
+  })
+  .catch(() => {
+    if (AppActions.isLocalStorageNameSupported) {
+      delete window.localStorage.session;
+      delete window.localStorage.info;
+    } else {
+      delete window.memoryStorage.session;
+      delete window.memoryStorage.info;
+    }
+    return AppDispatcher.dispatch({
+      APP_PAGE: 'LOGIN',
+      successMsg: null,
+      errorMsg: 'Timeout',
+    });
+  });
 } else {
   rpc.default.login('root', '')
   .then((data) => {
