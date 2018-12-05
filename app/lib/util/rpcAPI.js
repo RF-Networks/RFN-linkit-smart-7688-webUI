@@ -19,22 +19,24 @@ const rpcAPI = {
       .send(config)
       .set('Accept', 'application/json')
       .end((err, res) => {
+		  
         // return res.ok ? resolve(res) : reject(err);
         if (!res) {
-          return reject('Connection failed');
+          return reject(new Error('Connection failed'));
         }
 
         if (!res.ok) {
-          return reject('Connection failed');
+          return reject(new Error('Connection failed'));
         }
 
         if (res.body && res.body.error) {
-          return reject(res.body.error.message);
+          return reject(new Error(res.body.error.message));
         }
 
         if (!res.body.result || res.body.result[0] !== 0) {
-          return reject(ubusStatus[res.body.result[0]]);
+          return reject(new Error(ubusStatus[res.body.result[0]]));
         }
+		
         return resolve(res);
       });
     });

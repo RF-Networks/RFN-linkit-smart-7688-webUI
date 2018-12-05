@@ -67,18 +67,39 @@ module.exports = Object.keys(languages).map((language) => {
           },
           {
               test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-              loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
+			  use: {
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					minetype: 'application/font-woff',
+					name: '[name].[ext]'
+				},
+			  }
           },
           {
               test: /\.(ttf|eot|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-              loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
+			  use: {
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					minetype: 'application/font-woff',
+					name: '[name].[ext]'
+				},
+			  }
           },
           {
               test: /\.svg\?v=[0-9]\.[0-9]\.[0-9]$/,
-              loader: 'url-loader?limit=10000&minetype=application/font-woff&name=[name].[ext]'
+			  use: {
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					minetype: 'application/font-woff',
+					name: '[name].[ext]'
+				},
+			  }
           },
           {
-              test: /\.(svg|png|jpg|jpeg)$/,
+              test: /\.(svg|png|jpg|jpeg|ico)$/,
 			  use: {
 				loader: 'url-loader',
 				options: {

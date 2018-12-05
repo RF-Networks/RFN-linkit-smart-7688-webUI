@@ -27,7 +27,7 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "@babel/register": "^7.0.0",
-    "@material-ui/core": "^3.5.1",
+    "@material-ui/core": "^3.6.1",
     "@material-ui/icons": "^3.0.1",
     "classnames": "^2.2.6",
     "css-loader": "^1.0.1",
@@ -40,6 +40,7 @@
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.6.3",
+    "react-favicon": "0.0.14",
     "react-hot-loader": "^4.3.12",
     "style-loader": "^0.23.1",
     "superagent": "^4.0.0",

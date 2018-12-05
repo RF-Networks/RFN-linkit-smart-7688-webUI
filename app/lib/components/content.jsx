@@ -53,6 +53,7 @@ const styles = props => ({
     maxWidth: '790px',
     width: '100%',
     marginBottom: '30px',
+	zIndex: '0',
   },
   
   header: {
@@ -113,7 +114,7 @@ class contentComponent extends React.Component {
           </p>
 		</header>
 		<AppBar 
-          position="relative"
+          position="static"
           color="default"
           className={ classes.content }
           >

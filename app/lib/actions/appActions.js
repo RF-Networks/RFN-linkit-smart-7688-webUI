@@ -32,17 +32,32 @@ const appActions = {
   loadModel: (session) => {
     return rpc.default.loadModel(session);
   },
-
+  
+  loadSystem: (session) => {
+    return rpc.default.loadSystem(session);
+  },
+  
   initialFetchData: (session) => {
-    console.log("initialFetchData");
-    return promise.delay(10)
+    return promise.delay(10).then(() => {
+      return [
+        rpc.default.loadSystem(session),
+		rpc.default.loadNetstate('lan', session),
+      ];
+    })
+    .spread((system, lan) => {
+      const boardInfo = {};
+      boardInfo.system = system.body.result[1].values;
+	  boardInfo.lan = lan.body.result[1];
+      return boardInfo;
+    })
     .then((boardInfo) => {
-      return AppDispatcher.dispatch({
+      AppDispatcher.dispatch({
         APP_PAGE: 'CONTENT',
         boardInfo: boardInfo,
         successMsg: null,
         errorMsg: null,
       });
+	  return null;
     });
   },
   
@@ -86,14 +101,16 @@ const appActions = {
       }
 
       if (err === 'Connection failed') {
-        return AppDispatcher.dispatch({
+        AppDispatcher.dispatch({
           APP_PAGE: 'LOGIN',
           successMsg: null,
           errorMsg: 'Waiting',
         });
+		return null;
       }
 
       alert(err);
+	  return null;
     });
   },
 
@@ -103,31 +120,22 @@ const appActions = {
   resetPassword: (user, password) => {
     return rpc.default.resetPassword(user, password, window.session);
   },
+  
+  getQuery: (name) => {
+    let match;
+    const pl = /\+/g; /* Regex for replacing addition symbol with a space */
+    const search = /([^&=]+)=?([^&]*)/g;
+    const query = window.location.search.substring(1);
+    const decode = (s) => {
+      return decodeURIComponent(s.replace(pl, ' '));
+    };
 
-  loadSystem: (session) => {
-    return rpc.default.loadSystem(session);
-  },
-  initialFetchData: (session) => {
-    return promise.delay(10).then(() => {
-      return [
-        rpc.default.loadSystem(session),
-		rpc.default.loadNetstate('lan', session),
-      ];
-    })
-    .spread((system, lan) => {
-      const boardInfo = {};
-      boardInfo.system = system.body.result[1].values;
-	  boardInfo.lan = lan.body.result[1];
-      return boardInfo;
-    })
-    .then((boardInfo) => {
-      return AppDispatcher.dispatch({
-        APP_PAGE: 'CONTENT',
-        boardInfo: boardInfo,
-        successMsg: null,
-        errorMsg: null,
-      });
-    });
+    const urlParams = {};
+    while (match = search.exec(query)) {
+      urlParams[decode(match[1])] = decode(match[2]);
+    }
+
+    return urlParams[name];
   },
 };
 

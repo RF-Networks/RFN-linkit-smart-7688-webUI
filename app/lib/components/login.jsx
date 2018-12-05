@@ -80,7 +80,7 @@ const styles = props => ({
 
 @Radium
 class loginComponent extends React.Component {
-	static propTypes = {
+  static propTypes = {
     classes: PropTypes.object.isRequired,
     errorMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     successMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),

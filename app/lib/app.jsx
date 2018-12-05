@@ -1,6 +1,7 @@
 require('../css/main.css');
 
 import React from 'react';
+import Favicon from 'react-favicon';
 import { hot } from 'react-hot-loader';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import { render } from 'react-dom';
@@ -16,6 +17,8 @@ import Resetpassword from './components/resetpassword.jsx';
 
 /* store */
 import AppStore from './stores/appStore.js';
+
+import FaviconImg from '../img/favicon.ico';
 
 function appState() {
 	return AppStore.init();
@@ -72,6 +75,7 @@ export default class App extends React.Component {
 	return (
 	  <MuiThemeProvider theme={theme}>
       <div>
+		<Favicon url={FaviconImg}/>
         {elem}
       </div>
 	  </MuiThemeProvider>

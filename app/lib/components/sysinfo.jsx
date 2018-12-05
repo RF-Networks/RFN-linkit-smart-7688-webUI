@@ -15,6 +15,10 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import AppDispatcher from '../dispatcher/appDispatcher';
 import icon7688 from '../../img/7688.png';
 import icon7688Duo from '../../img/7688_duo.png';
 
@@ -97,6 +101,8 @@ class sysinfoComponent extends React.Component {
     this.state = {
       errorMsgTitle: null,
       errorMsg: null,
+	  boardMsgDialogShow: false,
+	  errorDialogShow: false,
     };
 
     this.state.PlatformBlockIsEdit = false;
@@ -275,32 +281,47 @@ class sysinfoComponent extends React.Component {
     return (
       <div>
         <Card>
-			<Dialog
-			  aria-labelledby="simple-dialog-title"
-			  ref="boardMsgDialog"
-			  open={ false }>
+			<Dialog open={this.state.boardMsgDialogShow} ref="boardMsgDialog" aria-labelledby="simple-dialog-title">
 			  <DialogTitle id="simple-dialog-title">{__('Device Restarting. Please Wait…')}</DialogTitle>
-			  <div style={{
-				  display: 'flex',
-				  flexDirection: 'column',
-				  justifyContent: 'center',
-				  alignItems: 'center',
-			    }}>
-				<p style={{
-				  fontSize: '16px',
-				  color: '#999A94',
-				  lineHeight: '18.54px',
-				  margin: '-15px 10px 10px 10px',
-			    }}>{ __('See the Wi-Fi LED, it will light on steadily and start to blink or turn off afterwards. When the LED starts to blink or turn off, reload this webpage to sign in again.') }</p>
+			  <DialogContent style={{ textAlign: 'center', }}>
+				<DialogContentText style={{
+					  fontSize: '16px',
+					  color: '#999A94',
+					  lineHeight: '18.54px',
+					  textAlign: 'left',
+					}}>
+					  { __('See the Wi-Fi LED, it will light on steadily and start to blink or turn off afterwards. When the LED starts to blink or turn off, reload this webpage to sign in again.') }
+				</DialogContentText>
 				<img src={ boardImg } style={{ width: '350px' }} />
-			  </div>
+			  </DialogContent>
+			  <DialogActions>
+				<Button 
+					onClick={() => { 
+					  this.setState({ boardMsgDialogShow: false }); 
+					  AppDispatcher.dispatch({
+						APP_PAGE: 'LOGIN',
+						successMsg: __('Configuration saved. You can sign in to the console after your device has restarted.'),
+						errorMsg: null,
+					  });
+					}} 
+					color="primary">
+				  OK
+				</Button>
+			  </DialogActions>
 			</Dialog>
-		    <Dialog
-			  aria-labelledby="simple-dialog-title"
-			  ref="errorDialog"
-			  open={ false }>
-			  <DialogTitle id="simple-dialog-title">{this.state.errorMsgTitle}</DialogTitle>
-			  <p style={{ color: '#999A94', marginTop: '-20px' }}>{ this.state.errorMsg }</p>
+			
+			<Dialog open={this.state.errorDialogShow} ref="boardMsgDialog" aria-labelledby="simple-dialog-title">
+				<DialogTitle id="simple-dialog-title">{this.state.errorMsgTitle}</DialogTitle>
+				<DialogContent>
+					<DialogContentText style={{ color: '#999A94', marginTop: '-20px' }}>
+					  {this.state.errorMsgTitle}
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+				<Button onClick={() => this.setState({ errorDialogShow: false })} color="primary">
+				  OK
+				</Button>
+			  </DialogActions>
 			</Dialog>
             { PlatformBlock }
 			<div style={{ borderTop: '1px solid rgba(0,0,0,0.12)', marginTop: '20px', marginBottom: '0px' }}></div>
@@ -320,6 +341,7 @@ class sysinfoComponent extends React.Component {
     if (password.length < 6) {
       return false;
     }
+	
 	return AppActions.resetHostName(this$.state.deviceName, window.session)
 	.then(() => {
       return AppActions.resetPassword('root', this$.state.password, window.session);
@@ -351,7 +373,7 @@ class sysinfoComponent extends React.Component {
   
   _returnToIndex(successMsg, errorMsg) {
     if (successMsg) {
-	  this.refs.boardMsgDialog.open = true;
+	  this.setState({ boardMsgDialogShow: true });
       this.setState({ boardSuccessMsg: successMsg });
     } else {
       if (AppActions.isLocalStorageNameSupported) {
@@ -361,13 +383,13 @@ class sysinfoComponent extends React.Component {
         delete window.memoryStorage.session;
         delete window.memoryStorage.info;
       }
-
-      return AppDispatcher.dispatch({
+	  AppDispatcher.dispatch({
         APP_PAGE: 'LOGIN',
         successMsg: successMsg || null,
         errorMsg: errorMsg || null,
-      });
+	  });
     }
+	return null;
   }
 }
 

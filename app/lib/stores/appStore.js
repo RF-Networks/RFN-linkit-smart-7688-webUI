@@ -27,43 +27,45 @@ if (window.session) {
       delete window.memoryStorage.session;
       delete window.memoryStorage.info;
     }
-    return AppDispatcher.dispatch({
+    AppDispatcher.dispatch({
       APP_PAGE: 'LOGIN',
       successMsg: null,
       errorMsg: 'Timeout',
     });
+	return null;
   });
 } else {
   rpc.default.login('root', '')
   .then((data) => {
 	const session = data.body.result[1].ubus_rpc_session;
     window.session = session;
-    return AppDispatcher.dispatch({
+    AppDispatcher.dispatch({
       APP_PAGE: 'FIRSTLOGIN',
       successMsg: null,
       errorMsg: null,
     });
+	return data;
   }).catch((err) => {
-	console.log("Login error: %s", err);
-    switch (err) {
+	console.log("Login error: %s", err.message);
+    switch (err.message) {
       case 'Connection failed':
-        return AppDispatcher.dispatch({
+        AppDispatcher.dispatch({
           APP_PAGE: 'LOGIN',
           successMsg: null,
           errorMsg: 'Waiting',
         });
         break;
       case 'Permission denied':
-        return AppDispatcher.dispatch({
+        AppDispatcher.dispatch({
           APP_PAGE: 'LOGIN',
           successMsg: null,
           errorMsg: null,
         });
       break;
       default:
-        return;
         break;
     }
+	return err;
   });
 }
 
