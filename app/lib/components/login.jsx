@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import Radium from 'radium';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import TextField from '@material-ui/core/TextField';
@@ -164,7 +166,11 @@ class loginComponent extends React.Component {
           ref="waitingDialog"
           open={ this.state.waiting }>
           <DialogTitle id="simple-dialog-title">{__('Connection failed...')}</DialogTitle>
-          <p style={{ lineHeight: '23px', margin: '-10px 10px 10px 10px' }}>{__('Please refresh. If problem persists, please ensure your board is not in the process of rebooting, or updating new firmware, or check Wi-Fi connectivity settings.')}</p>
+		  <DialogContent>
+			<DialogContentText style={{ lineHeight: '23px', margin: '10px 10px 10px 10px' }}>
+			  {__('Please refresh. If problem persists, please ensure your board is not in the process of rebooting, or updating new firmware, or check Wi-Fi connectivity settings.')}
+			</DialogContentText>
+		  </DialogContent>
         </Dialog>
         <div className={ classes.block }>
             <div style={{

@@ -19,7 +19,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import AppDispatcher from '../dispatcher/appDispatcher';
-import icon7688 from '../../img/7688.png';
+import icon7688 from '../../img/7688.gif';
 import icon7688Duo from '../../img/7688_duo.png';
 
 const styles = props => ({
@@ -292,7 +292,7 @@ class sysinfoComponent extends React.Component {
 					}}>
 					  { __('See the Wi-Fi LED, it will light on steadily and start to blink or turn off afterwards. When the LED starts to blink or turn off, reload this webpage to sign in again.') }
 				</DialogContentText>
-				<img src={ boardImg } style={{ width: '350px' }} />
+				<img src={ boardImg } style={{ width: '350px', marginTop: '10px', marginBottom: '-20px',}} />
 			  </DialogContent>
 			  <DialogActions>
 				<Button 

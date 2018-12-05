@@ -106,7 +106,7 @@ class contentComponent extends React.Component {
     return(
 	  <div key="mainBlock" className={ classes.block }>
 	    <header className={ classes.header }>
-		  <p className={ classes.welcomeTitle } key="welcome">{ __('Welcome to') } <b>{ this.state.boardModel }</b></p>
+		  <p className={ classes.welcomeTitle } key="welcome">{ __('Welcome to') } <b>RFN Smart Gateway</b></p>
           <p className={ classes.welcomeTitle + ' ' + classes.welcomeTitleLine } key="advanced">
             {
               __('For advanced network configuration, go to ')

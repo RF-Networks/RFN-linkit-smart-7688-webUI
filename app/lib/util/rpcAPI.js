@@ -19,7 +19,6 @@ const rpcAPI = {
       .send(config)
       .set('Accept', 'application/json')
       .end((err, res) => {
-		  
         // return res.ok ? resolve(res) : reject(err);
         if (!res) {
           return reject(new Error('Connection failed'));

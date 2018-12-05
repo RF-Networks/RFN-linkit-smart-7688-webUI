@@ -100,7 +100,7 @@ const appActions = {
         delete window.memoryStorage.info;
       }
 
-      if (err === 'Connection failed') {
+      if (err.message === 'Connection failed') {
         AppDispatcher.dispatch({
           APP_PAGE: 'LOGIN',
           successMsg: null,
@@ -109,7 +109,7 @@ const appActions = {
 		return null;
       }
 
-      alert(err);
+      alert(err.message);
 	  return null;
     });
   },

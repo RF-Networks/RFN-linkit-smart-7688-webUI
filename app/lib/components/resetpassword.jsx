@@ -197,8 +197,7 @@ class resetPasswordComponent extends React.Component {
       });
     })
     .catch((err) => {
-      return alert(err);
-      if (err === 'Connection failed') {
+      if (err.message === 'Connection failed') {
         return alert(__('The device is still in the restarting process. Please retry again when the restarting process is complete.') + __('Please make sure your host computer is in the same network as the device. You can’t access this page if it’s in a different network.'));
       }
     });

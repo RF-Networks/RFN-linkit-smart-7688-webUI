@@ -99,7 +99,7 @@ module.exports = Object.keys(languages).map((language) => {
 			  }
           },
           {
-              test: /\.(svg|png|jpg|jpeg|ico)$/,
+              test: /\.(svg|png|jpg|jpeg|ico|gif)$/,
 			  use: {
 				loader: 'url-loader',
 				options: {
