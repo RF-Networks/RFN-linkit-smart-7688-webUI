@@ -352,7 +352,7 @@ class sysinfoComponent extends React.Component {
         return;
       })
       .catch((err) => {
-        if (err === 'no data') {
+        if (err.message === 'no data') {
           return false;
         }
         return err;
@@ -362,7 +362,7 @@ class sysinfoComponent extends React.Component {
       return this$._returnToIndex(__('Configuration saved. You can sign in to the console after your device has restarted.'));
     })
     .catch((err) => {
-      if (err === 'Access denied') {
+      if (err.message === 'Access denied') {
         this$.setState({ errorMsgTitle: __('Access denied'), errorMsg: __('Your token was expired, please sign in again.') });
         this$.refs.errorMsg.open = true;
 		return true;
