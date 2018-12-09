@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Sysinfo from './sysinfo.jsx';
+import Network from './network.jsx';
 import Typography from '@material-ui/core/Typography';
 import AppActions from '../actions/appActions';
 
@@ -132,7 +133,7 @@ class contentComponent extends React.Component {
 			<Tab label={ __('Configuration') } value={2} fullWidth/>
 		  </Tabs>
 		  {this.state.tabsValue === 0 && <TabContainer><Sysinfo boardInfo={ this.props.boardInfo } /></TabContainer>}
-          {this.state.tabsValue === 1 && <TabContainer>Item Two</TabContainer>}
+          {this.state.tabsValue === 1 && <TabContainer><Network boardInfo={ this.props.boardInfo } /></TabContainer>}
           {this.state.tabsValue === 2 && <TabContainer>Item Three</TabContainer>}
 		</AppBar>
 	  </div>

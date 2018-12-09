@@ -85,5 +85,8 @@
   "Server port": "Server port",
   "Configuration saved.": "Configuration saved.",
   "Device settings": "Device settings",
-  "Channel": "Channel"
+  "Channel": "Channel",
+  "Repeater SSID": "Repeater SSID",
+  "Repeater password": "Repeater password",
+  "Repeater mode": "Repeater mode"
 }

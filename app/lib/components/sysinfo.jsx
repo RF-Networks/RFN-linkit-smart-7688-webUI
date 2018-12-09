@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Radium from 'radium';
-import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
 import AppActions from '../actions/appActions';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -310,7 +309,7 @@ class sysinfoComponent extends React.Component {
 			  </DialogActions>
 			</Dialog>
 			
-			<Dialog open={this.state.errorDialogShow} ref="boardMsgDialog" aria-labelledby="simple-dialog-title">
+			<Dialog open={this.state.errorDialogShow} ref="errorDialog" aria-labelledby="simple-dialog-title">
 				<DialogTitle id="simple-dialog-title">{this.state.errorMsgTitle}</DialogTitle>
 				<DialogContent>
 					<DialogContentText style={{ color: '#999A94', marginTop: '-20px' }}>

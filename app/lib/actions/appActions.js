@@ -20,6 +20,9 @@ let isLocalStorageNameSupported = false;
 const appActions = {
   isLocalStorageNameSupported: isLocalStorageNameSupported,
   
+  commitWifi: (session) => {
+    return rpc.default.commitWifi(session);
+  },
   commitAndReboot: (session) => {
     return rpc.default.commitWifi(session)
     .then(() => {
@@ -32,6 +35,60 @@ const appActions = {
   loadModel: (session) => {
     return rpc.default.loadModel(session);
   },
+  renameLanConfig: (old_name, new_name, session) => {
+	return rpc.default.renameLanConfig(old_name, new_name, session);
+  },
+  setLanMode: (mode, session) => {	
+	return rpc.default.setLanMode(mode, session);
+  },
+  setWifi: (mode, content, session) => {
+	if (mode === 'apsta') {
+	  return rpc.default.setWifi('sta', content.ssid, content.key, session)
+	  .then(() => {
+        return rpc.default.setWifi('ap', content.repeaterSsid, content.repeaterKey, session);
+      });
+	}
+	return rpc.default.setWifi(mode, content.ssid, content.key, session);
+  },
+  
+  setWifiMode: (mode, session) => {
+	let network = 'lan';
+	if (mode !== 'apsta') {
+	  network = 'wan';
+	}
+	const disable_sta = (mode !== 'ap')? 0 : 1;
+	const disable_ap = (mode !== 'sta')? 0 : 1;
+	
+	return rpc.default.disableWifiInterface('ap', disable_ap, session)
+	.then(() => {
+      return rpc.default.disableWifiInterface('sta', disable_sta, session);
+    })
+	//.then(() => {
+    //  return rpc.default.setWifiNetworkConfig(network, session);
+    //})
+	.then(() => {
+	  return rpc.default.uciCommit('network', session);
+	});
+  },
+  
+  scanWifi: (session) => {
+    return rpc.default.scanWifi(session);
+  },
+   
+  resetHostName: (hostname, session) => {
+    return rpc.default.resetHostName(hostname, session);
+  },
+  resetPassword: (user, password) => {
+    return rpc.default.resetPassword(user, password, window.session);
+  },
+  
+  loadNetwork: (session) => {
+    return rpc.default.loadNetwork(session);
+  },
+  
+  loadNetstate: (session) => {
+    return rpc.default.loadNetstate(session);
+  },
   
   loadSystem: (session) => {
     return rpc.default.loadSystem(session);
@@ -41,13 +98,19 @@ const appActions = {
     return promise.delay(10).then(() => {
       return [
         rpc.default.loadSystem(session),
+		rpc.default.loadWifi(session),
+        rpc.default.loadNetwork(session),
 		rpc.default.loadNetstate('lan', session),
+		rpc.default.loadNetstate('wan', session),
       ];
     })
-    .spread((system, lan) => {
+    .spread((system, wifi, network, lan, wan) => {
       const boardInfo = {};
       boardInfo.system = system.body.result[1].values;
+	  boardInfo.wifi = wifi.body.result[1].values;
+      boardInfo.network = network.body.result[1].values;
 	  boardInfo.lan = lan.body.result[1];
+	  boardInfo.wan = wan.body.result[1];
       return boardInfo;
     })
     .then((boardInfo) => {
@@ -112,13 +175,6 @@ const appActions = {
       alert(err.message);
 	  return null;
     });
-  },
-
-  resetHostName: (hostname, session) => {
-    return rpc.default.resetHostName(hostname, session);
-  },
-  resetPassword: (user, password) => {
-    return rpc.default.resetPassword(user, password, window.session);
   },
   
   getQuery: (name) => {
