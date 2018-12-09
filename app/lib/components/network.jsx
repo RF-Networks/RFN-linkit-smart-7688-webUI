@@ -729,7 +729,13 @@ class networkComponent extends React.Component {
 		return (this.state.lanmode === 'ap')? AppActions.renameLanConfig('orig_ip6assign', 'ip6assign', window.session) : AppActions.renameLanConfig('ip6assign', 'orig_ip6assign', window.session);
 	})
 	.then(() => {
-		return AppActions.commitWifi(window.session);
+		return AppActions.commitAndReboot(window.session)
+		.catch((err) => {
+          if (err === 'no data' || err.msg === 'no data') {
+            return false;
+          }
+          return err;
+        });
 	})
 	.then(() => {
       return this$._returnToIndex(__('Configuration saved. You can sign in to the console after your device has restarted.'));
