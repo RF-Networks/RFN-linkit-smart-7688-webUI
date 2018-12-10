@@ -104,6 +104,8 @@ class contentComponent extends React.Component {
   render() {
 	const { classes } = this.props;
 	
+	let configTag = '';//<Tab label={ __('Configuration') } value={2} fullWidth/>
+	
     return(
 	  <div key="mainBlock" className={ classes.block }>
 	    <header className={ classes.header }>
@@ -130,7 +132,7 @@ class contentComponent extends React.Component {
             style={{ backgroundColor: green[500], borderRadius: '5px 5px 0px 0px', color: '#fff' }}>
 			<Tab label={ __('System information') } value={0} fullWidth/>
 			<Tab label={ __('Network') } value={1} fullWidth/>
-			<Tab label={ __('Configuration') } value={2} fullWidth/>
+			{ configTag }
 		  </Tabs>
 		  {this.state.tabsValue === 0 && <TabContainer><Sysinfo boardInfo={ this.props.boardInfo } /></TabContainer>}
           {this.state.tabsValue === 1 && <TabContainer><Network boardInfo={ this.props.boardInfo } /></TabContainer>}

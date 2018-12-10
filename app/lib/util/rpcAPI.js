@@ -203,6 +203,30 @@ const rpcAPI = {
     };
     return this.request(config);
   },
+  set3G: function(apn, pincode, username, password, session) {
+	const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [
+        session,
+        'uci',
+        'set',
+        {
+          config: 'network',
+          section: '3G',
+          values: {
+            apn: apn,
+            pincode: pincode,
+			username: username,
+            password: password,
+          },
+        },
+      ],
+    };
+
+    return this.request(config);
+  },
   setWifi: function(section, ssid, key, session) {
 	let enc = 'none';
     if (key.length > 1) {

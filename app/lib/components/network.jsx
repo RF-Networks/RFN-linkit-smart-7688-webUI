@@ -64,6 +64,8 @@ class networkComponent extends React.Component {
 	  lanmode: (this.props.boardInfo.lan.proto === 'static')? 'ap' : 'sta',
 	  boardMsgDialogShow: false,
 	  errorDialogShow: false,
+	  cellularEnabled: false,
+	  cellularPasswordShow: false,
     };
 	
 	this.state.wifiList = [{
@@ -84,6 +86,15 @@ class networkComponent extends React.Component {
         encryption: true,
       };
     }
+	
+	this.state.cellularEnabled = (this.props.boardInfo.network['3G'] !== undefined);
+	this.state.cellularConfig = this.props.boardInfo.network['3G'];
+	if (this.state.cellularConfig.pincode === undefined)
+	  this.state.cellularConfig.pincode = '';
+    if (this.state.cellularConfig.username === undefined)
+	  this.state.cellularConfig.username = '';
+    if (this.state.cellularConfig.password === undefined)
+	  this.state.cellularConfig.password = '';
 	
 	this.state.showPassword = false;
     this.state.showRepeaterPassword = false;
@@ -160,17 +171,23 @@ class networkComponent extends React.Component {
 	
 	let textType = 'password';
 	let repeaterTextType = 'password';
+	let cellularTextType = 'password';
 	let elem;
 	let hasError = false;
 	let staPassword;
 	let errorText = __('Please enter your password');
 	let boardImg;
+	let cellularElem = '';
 	
 	if (this.state.showPassword) {
       textType = 'text';
     }
 	if (this.state.showRepeaterPassword) {
       repeaterTextType = 'text';
+    }
+	
+	if (this.state.cellularPasswordShow) {
+      cellularTextType = 'text';
     }
 	
 	if (this.state.notPassPassword || this.state.notPassRepeaterPassword) {
@@ -183,6 +200,110 @@ class networkComponent extends React.Component {
     } else {
       boardImg = icon7688Duo;
     }
+	
+	if (this.state.cellularEnabled) {
+	  cellularElem = (
+		<div>
+		  <br/>
+	      <h4>Cellular</h4>
+		  <TextField 
+		    type="text"
+			helperText="APN"
+			style={{ width: '100%' }}
+			required 
+			label="APN"
+			value={ this.state.cellularConfig.apn || '' }
+			onChange={
+              (e) => {
+				this.setState({
+                  cellularConfig: {
+                      apn: e.target.value,
+					  pincode: this.state.cellularConfig.pincode,
+					  username: this.state.cellularConfig.username,
+					  password: this.state.cellularConfig.password,
+                  },
+                });
+              }
+            }
+			/>
+		  <br/>
+		  <TextField 
+		    type="text"
+			helperText="PIN"
+			style={{ width: '100%' }}
+			required 
+			label="PIN"
+			value={ this.state.cellularConfig.pincode || '' }
+			onChange={
+              (e) => {
+                this.setState({
+                  cellularConfig: {
+                      apn: this.state.cellularConfig.apn,
+					  pincode: e.target.value,
+					  username: this.state.cellularConfig.username,
+					  password: this.state.cellularConfig.password,
+                  },
+                });
+              }
+            }
+			/>
+		  <br/>
+		  <TextField 
+		    type="text"
+			helperText={ __('Username') }
+			style={{ width: '100%' }}
+			required 
+			label={ __('Username') }
+			value={ this.state.cellularConfig.username || '' }
+			onChange={
+              (e) => {
+                this.setState({
+                  cellularConfig: {
+                      apn: this.state.cellularConfig.apn,
+					  pincode: this.state.cellularConfig.pincode,
+					  username: e.target.value,
+					  password: this.state.cellularConfig.password,
+                  },
+                });
+              }
+            }
+			/>
+		  <br/>
+		  <TextField
+			style={{ width: '100%' }}
+			value={ this.state.cellularConfig.password || '' }
+			helperText={__('Please enter your password')}
+			type={ cellularTextType }
+			label={__('Password')}
+			onChange={
+              (e) => {
+                this.setState({
+                  cellularConfig: {
+                      apn: this.state.cellularConfig.apn,
+					  pincode: this.state.cellularConfig.pincode,
+					  username: this.state.cellularConfig.username,
+					  password: e.target.value,
+                  },
+                });
+              }
+            }
+			InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="Toggle password visibility"
+                    onClick={ () => { this.setState(state => ({ cellularPasswordShow: !state.cellularPasswordShow }));}}
+                  >
+                    {this.state.cellularPasswordShow ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+			/>
+		  <br/>
+		</div>
+	  );
+	}
 	
 	if (this.state.mode === 'sta') {
 	  if (this.state.staContent.encryption) {
@@ -588,6 +709,7 @@ class networkComponent extends React.Component {
               />
 			</RadioGroup>
 			{ elem }
+		    { cellularElem }
 			<div style={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -727,6 +849,11 @@ class networkComponent extends React.Component {
 	})
 	.then(() => {
 		return (this.state.lanmode === 'ap')? AppActions.renameLanConfig('orig_ip6assign', 'ip6assign', window.session) : AppActions.renameLanConfig('ip6assign', 'orig_ip6assign', window.session);
+	})
+	.then(() => {
+		if (!this.state.cellularEnabled)
+		  return null;
+		return AppActions.set3G(this.state.cellularConfig.apn, this.state.cellularConfig.pincode, this.state.cellularConfig.username, this.state.cellularConfig.password, window.session);
 	})
 	.then(() => {
 		return AppActions.commitAndReboot(window.session)

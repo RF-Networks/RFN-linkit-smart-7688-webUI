@@ -116,7 +116,11 @@ class sysinfoComponent extends React.Component {
       this.state.user = info.user;
       this.state.password = info.password;
 
-      this.state.currentIp = this.props.boardInfo.lan['ipv4-address'][0].address;
+	  let lanIP = (this.props.boardInfo.lan['ipv4-address'] === undefined)? '' : '(LAN: ' + this.props.boardInfo.lan['ipv4-address'][0].address + ') ';
+	  let wanIP = (this.props.boardInfo.wan['ipv4-address'] === undefined)? '' : '(WiFi: ' + this.props.boardInfo.wan['ipv4-address'][0].address + ') ';
+      this.state.currentIp = lanIP + wanIP;//this.props.boardInfo.lan['ipv4-address'][0].address;
+
+	  //console.log((this.props.boardInfo.wan['ipv4-address'] === undefined)? 'Unknown' : this.props.boardInfo.wan['ipv4-address'][0].address);
     }
 	
 	this._editPlatformBlock = this._editPlatformBlock.bind(this);
