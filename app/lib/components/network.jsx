@@ -89,12 +89,14 @@ class networkComponent extends React.Component {
 	
 	this.state.cellularEnabled = (this.props.boardInfo.network['3G'] !== undefined);
 	this.state.cellularConfig = this.props.boardInfo.network['3G'];
-	if (this.state.cellularConfig.pincode === undefined)
-	  this.state.cellularConfig.pincode = '';
-    if (this.state.cellularConfig.username === undefined)
-	  this.state.cellularConfig.username = '';
-    if (this.state.cellularConfig.password === undefined)
-	  this.state.cellularConfig.password = '';
+	if (this.state.cellularConfig !== undefined) {
+	  if (this.state.cellularConfig.pincode === undefined)
+	    this.state.cellularConfig.pincode = '';
+      if (this.state.cellularConfig.username === undefined)
+	    this.state.cellularConfig.username = '';
+      if (this.state.cellularConfig.password === undefined)
+	    this.state.cellularConfig.password = '';
+	}
 	
 	this.state.showPassword = false;
     this.state.showRepeaterPassword = false;
