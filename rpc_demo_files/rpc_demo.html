@@ -21,7 +21,7 @@ var UBUS_STATUS_UNKNOWN_ERROR = 9;
 var UBUS_STATUS_CONNECTION_FAILED = 10;
 function do_ajax(data, success) {
 	$.ajax({
-		url: "http://mylinkit.local/ubus",
+		url: "http://mylinkit/ubus",
 		type: "post",
 		data: JSON.stringify(data),
 		success: function(reply) {
@@ -75,9 +75,24 @@ function rpc_passwd(pass) {
 	});
 }
 
+function rpc_setWifi(mode) {
+	//config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+	//		"params": [ session, "file", "exec", { "command": "wifi_mode", "params" : mode }  ] };
+	config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "file", "exec", { "command": "/usr/bin/wifi_mode", "params" : [ mode, "norestart" ] } ] };
+	do_ajax(config, function(reply) {
+		if (!reply.result || reply.result[0] != 0)
+			alert("failed to set mode");
+		else
+			alert(reply.result);
+			
+	});
+}
+
 $(document).ready(function() {
   $("#BtnLogin").click(function() { rpc_login("root", $("#Password").val()); });
   $("#BtnPasswd").click(function() { rpc_passwd($("#NewPasswd").val()); });
+  $("#BtnAP").click(function() { rpc_setWifi("ap"); });
 });
 </script>
 
@@ -94,4 +109,6 @@ New Password <input type="input" id="NewPasswd">
 <input type="button" value="Change" id="BtnPasswd">
 <br><br>
 
+<h3> Test Wifi-Mode </h3>
+<input type="button" value="Set Wifi AP" id="BtnAP">
 </body></html>

@@ -44,7 +44,7 @@ const appActions = {
   set3G: (apn, pincode, username, password, session) => {	
 	return rpc.default.set3G(apn, pincode, username, password, session);
   },
-  setWifi: (mode, content, session) => {
+  setWifi: (mode, content, session) => {	
 	if (mode === 'apsta') {
 	  return rpc.default.setWifi('sta', content.ssid, content.key, session)
 	  .then(() => {
@@ -72,6 +72,10 @@ const appActions = {
 	.then(() => {
 	  return rpc.default.uciCommit('network', session);
 	});
+  },
+  
+  setLinkitMode: (mode, session) => {
+	  return rpc.default.setLinkitMode(mode, session);
   },
   
   scanWifi: (session) => {

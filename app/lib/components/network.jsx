@@ -836,21 +836,16 @@ class networkComponent extends React.Component {
       return false;
     }
 	
+	let mode = this.state.mode;
+	
+	if (this.state.lanmode !== 'ap') {
+		mode = 'lancli';
+		this.state.mode = 'ap';
+	} 
+	
 	return AppActions.setWifi(this.state.mode, this.state[ this.state.mode + 'Content'], window.session)
 	.then(() => {
-		return AppActions.setWifiMode(this.state.mode, window.session);
-	})
-	.then(() => {
-		return AppActions.setLanMode(this.state.lanmode, window.session);
-	})
-	.then(() => {
-		return (this.state.lanmode === 'ap')? AppActions.renameLanConfig('orig_ipaddr', 'ipaddr', window.session) : AppActions.renameLanConfig('ipaddr', 'orig_ipaddr', window.session);
-	})
-	.then(() => {
-		return (this.state.lanmode === 'ap')? AppActions.renameLanConfig('orig_netmask', 'netmask', window.session) : AppActions.renameLanConfig('netmask', 'orig_netmask', window.session);
-	})
-	.then(() => {
-		return (this.state.lanmode === 'ap')? AppActions.renameLanConfig('orig_ip6assign', 'ip6assign', window.session) : AppActions.renameLanConfig('ip6assign', 'orig_ip6assign', window.session);
+		return AppActions.setLinkitMode(mode, window.session);
 	})
 	.then(() => {
 		if (!this.state.cellularEnabled)

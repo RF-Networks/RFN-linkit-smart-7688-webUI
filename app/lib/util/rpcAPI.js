@@ -8,7 +8,7 @@ let id = 1;
 let RPCurl = '/ubus';
 
 if (window.location.hostname === '127.0.0.1') {
-  RPCurl = 'http://mylinkit.local/ubus';
+  RPCurl = 'http://mylinkit/ubus';
 }
 
 const rpcAPI = {
@@ -202,6 +202,24 @@ const rpcAPI = {
       ],
     };
     return this.request(config);
+  },
+  setLinkitMode: function(mode, session)
+  {
+	const config = {
+	  jsonrpc: '2.0',
+	  id: id++,
+	  method: 'call',
+	  params: [
+		session,
+		'file',
+		'exec',
+		{
+		  command: '/usr/bin/wifi_mode',
+		  params: [ mode, 'norestart' ],
+		},
+	  ],
+	};
+	return this.request(config);
   },
   set3G: function(apn, pincode, username, password, session) {
 	const config = {
