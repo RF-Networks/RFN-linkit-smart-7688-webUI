@@ -1,6 +1,5 @@
 const path = require("path")
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const I18nPlugin = require("i18n-webpack-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -20,11 +19,6 @@ module.exports = Object.keys(languages).map(function(language) {
 	
 	let plugins = [
 		new ExtractTextPlugin('[name].css'),
-		new HtmlWebpackPlugin({
-		  filename: html_filename + '.html',
-		  template: 'app/' + html_filename + '.html',
-		  inject: false
-		}),
 		new webpack.NamedModulesPlugin(),
 		new webpack.NoEmitOnErrorsPlugin(),
 		new I18nPlugin(languages[language])
@@ -68,7 +62,10 @@ module.exports = Object.keys(languages).map(function(language) {
 		  },
 		  {
               test: /\.css$/,
-              loader: ['style-loader', 'css-loader']
+              use: ExtractTextPlugin.extract({
+				fallback: "style-loader",
+				use: "css-loader"
+			  })
           },
 		  {
               test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
