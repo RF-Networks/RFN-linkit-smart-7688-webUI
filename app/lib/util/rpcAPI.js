@@ -8,7 +8,7 @@ let id = 1;
 let RPCurl = '/ubus';
 
 if (window.location.hostname === '127.0.0.1') {
-  RPCurl = 'http://mylinkit/ubus';
+  RPCurl = 'http://mylinkit.local/ubus';
 }
 
 const rpcAPI = {

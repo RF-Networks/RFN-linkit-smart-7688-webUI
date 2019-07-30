@@ -12,7 +12,6 @@ import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import Visibility from '@material-ui/icons/Visibility';
@@ -81,16 +80,18 @@ const styles = props => ({
 });
 
 @Radium
-class loginComponent extends React.Component {
+class loginComponent extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     errorMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     successMsg: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   }
+  
   constructor(props) {
-    super(props);
+	super(props);
     this.classes = props;
-    this.state = {
+	this.waitingDialog = React.createRef();
+	this.state = {
       password: '',
       waiting: this.props.errorMsg === 'Waiting',
       showPassword: false,
@@ -98,16 +99,17 @@ class loginComponent extends React.Component {
       successMsg: this.props.successMsg,
     };
 
-    this._handleLogin = this._handleLogin.bind(this);
+    this._handleLogin = this._handleLogin.bind(this)
   }
-
+  
   componentDidMount() {
     if (this.props.errorMsg === 'Waiting') {
       this.state.waiting = true;
-      this.refs.waitingDialog.open = true;
+	  console.log(this.waitingDialog.current);
+      //this.refs.waitingDialog.open = true;
     } else {
       this.state.waiting = false;
-      this.refs.waitingDialog.open = false;
+      //this.refs.waitingDialog.open = false;
     }
 
     if (this.state.successMsg) {
@@ -122,18 +124,18 @@ class loginComponent extends React.Component {
       }
     });
   }
-
+  
   render() {
-    const { classes } = this.props;
+	const { classes } = this.props;
     let textType = 'password';
     let error = false;
     let errorText = __('Please enter your password');
     if (this.state.showPassword) {
       textType = 'text';
     }
-
-    let dialogMsg;
-    if (this.state.successMsg) {
+	
+	let dialogMsg;
+	if (this.state.successMsg) {
       dialogMsg = (
         <div style={{
           width: '100%',
@@ -159,21 +161,20 @@ class loginComponent extends React.Component {
         </div>
       );
     }
-    return (
-      <div className={ classes.frame }>
-        <Dialog
-          aria-labelledby="simple-dialog-title"
-          ref="waitingDialog"
-          open={ this.state.waiting }>
-          <DialogTitle id="simple-dialog-title">{__('Connection failed...')}</DialogTitle>
-		  <DialogContent>
-			<DialogContentText style={{ lineHeight: '23px', margin: '10px 10px 10px 10px' }}>
-			  {__('Please refresh. If problem persists, please ensure your board is not in the process of rebooting, or updating new firmware, or check Wi-Fi connectivity settings.')}
-			</DialogContentText>
-		  </DialogContent>
-        </Dialog>
-        <div className={ classes.block }>
-            <div style={{
+	return (
+		<div className={ classes.frame }>
+		  <Dialog
+			aria-labelledby="simple-dialog-title"
+			open={ this.state.waiting }>
+			<DialogTitle id="simple-dialog-title">{__('Connection failed...')}</DialogTitle>
+			<DialogContent>
+			  <DialogContentText style={{ lineHeight: '23px', margin: '10px 10px 10px 10px' }}>
+				{__('Please refresh. If problem persists, please ensure your board is not in the process of rebooting, or updating new firmware, or check Wi-Fi connectivity settings.')}
+			  </DialogContentText>
+			</DialogContent>
+		  </Dialog>
+		  <div className={ classes.block }>
+		    <div style={{
               width: '300px',
               paddingLeft: '60px',
               paddingRight: '60px',
@@ -182,15 +183,15 @@ class loginComponent extends React.Component {
               flexDirection: 'column',
               alignItems: 'center',
             }}>
-              <img src={ Logo } className={ classes.img } />
-              <p style={{
+			  <img src={ Logo } className={ classes.img } />
+			  <p style={{
                 lineHeight: '22px',
                 marginTop: '40px',
                 fontFamily: 'RionaSansLight,Arial,Helvetica,sans-serif',
               }}><span style={{fontFamily: 'RionaSansLight,Arial,Helvetica,sans-serif'}}>{__('Welcome to')}</span> <b style={{ fontFamily: 'RionaSansMedium,Arial,Helvetica,sans-serif' }}>RFN Smart Gateway</b>.</p>
               <h3 className={ classNames(classes.panelTitle) }>{__('Account')}</h3>
               <p className={ classNames(classes.panelContent) }>root(default)</p>
-              <TextField
+			  <TextField
                 error = { error }
                 helperText={ errorText }
                 type={textType}
@@ -226,8 +227,8 @@ class loginComponent extends React.Component {
                 onClick={ this._handleLogin }>
                 { __('Sign in') }
               </Button>
-            </div>
-            <div style={{width: '100%'}}>
+			</div>
+			<div style={{width: '100%'}}>
               <p style={{
                 marginTop: '80px',
                 borderTop: '1px solid rgba(0,0,0,0.12)',
@@ -235,12 +236,11 @@ class loginComponent extends React.Component {
                 textAlign: 'center',
               }} >{ __('For advanced network configuration, go to ') }<a style={{ color: '#00a1de', textDecoration: 'none' }} href="/cgi-bin/luci">OpenWrt</a>.</p>
             </div>
-        </div>
-        { dialogMsg }
-      </div>
-    );
+		  </div>
+		</div>
+	);
   }
-
+  
   _handleLogin() {
     const password = this.state.password;
     return AppActions.login('root', password);

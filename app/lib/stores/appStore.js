@@ -15,7 +15,7 @@ if (AppActions.isLocalStorageNameSupported) {
 }
 
 if (window.session) {
-  rpc.grantCode(window.session)
+  rpc.default.grantCode(window.session)
   .then(() => {
     return AppActions.initialFetchData(window.session);
   })
@@ -37,6 +37,7 @@ if (window.session) {
 } else {
   rpc.default.login('root', '')
   .then((data) => {
+	
 	const session = data.body.result[1].ubus_rpc_session;
     window.session = session;
     AppDispatcher.dispatch({

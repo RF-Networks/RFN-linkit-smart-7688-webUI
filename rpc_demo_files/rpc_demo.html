@@ -21,7 +21,7 @@ var UBUS_STATUS_UNKNOWN_ERROR = 9;
 var UBUS_STATUS_CONNECTION_FAILED = 10;
 function do_ajax(data, success) {
 	$.ajax({
-		url: "http://mylinkit/ubus",
+		url: "http://mylinkit.local/ubus",
 		type: "post",
 		data: JSON.stringify(data),
 		success: function(reply) {
@@ -43,6 +43,7 @@ function rpc_login(user, pass)
 	$("#fwSession").val("");
 	session = "";
 	do_ajax(login, function(reply) {
+		console.log(reply);
 		if (!reply.result || reply.result[0] != 0) {
 			alert("failed to login");
 			return;

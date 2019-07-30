@@ -1,13 +1,13 @@
 require('../css/main.css');
 
-import React from 'react';
-import Favicon from 'react-favicon';
-import { hot } from 'react-hot-loader';
-import FormControl from 'react-bootstrap/lib/FormControl';
+import React, { Component } from "react";
 import { render } from 'react-dom';
 import AppConstants from './constants/appConstants.js';
+import Favicon from 'react-favicon';
 import { withStyles, MuiThemeProvider, createMuiTheme, withTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
+
+import FaviconImg from '../img/favicon.ico';
 
 /* component */
 import Login from './components/login.jsx';
@@ -18,10 +18,8 @@ import Resetpassword from './components/resetpassword.jsx';
 /* store */
 import AppStore from './stores/appStore.js';
 
-import FaviconImg from '../img/favicon.ico';
-
 function appState() {
-	return AppStore.init();
+  return AppStore.init();
 }
 
 const theme = createMuiTheme({
@@ -33,11 +31,11 @@ const theme = createMuiTheme({
   },
 });
 
-export default class App extends React.Component {
+export default class App extends Component {
   constructor(props) {
-	super(props);
+    super(props);
 	this.state = {};
-    this._onChange = this._onChange.bind(this);
+	this._onChange = this._onChange.bind(this);
   }
   
   componentDidMount() { 
@@ -49,43 +47,45 @@ export default class App extends React.Component {
   }
   
   getInitialState() {
-    return appState();
+	return appState();
   }
   
   render() {
-	let elem = '';
+	let elem = '';  
+	
 	switch (this.state.APP_PAGE) {
-		case AppConstants.FIRSTLOGIN:
-		  elem = <Resetpassword { ... this.state }/>;
-		  break;
-		case AppConstants.LOGIN:
-          elem = <Login { ... this.state }/>;
-          break;
-		case AppConstants.CONTENT:
-		  elem = (
-			<div>
-			  <Header { ... this.state } />
-			  <Content { ... this.state } />
-			</div>
-		  );
-		  break;
-		default:
-		  break;
+	  case AppConstants.FIRSTLOGIN:
+	    elem = <Resetpassword { ... this.state }/>;
+	    break;
+	  case AppConstants.LOGIN:
+	    elem = <Login { ... this.state }/>;
+	    break;
+	  case AppConstants.CONTENT:
+	    elem = (
+		  <div>
+		    <Header { ... this.state } />
+		    <Content { ... this.state } />
+		  </div>
+		);
+	    break;
+	  default:
+		break;
 	}
+	
 	return (
 	  <MuiThemeProvider theme={theme}>
-      <div>
+	  <div>
 		<Favicon url={FaviconImg}/>
-        {elem}
-      </div>
+		{elem}
+	  </div>
 	  </MuiThemeProvider>
     );
   }
   
   _onChange() {
-    this.setState(appState());
+	this.setState(appState());
   }
-}
+};
 
 render(
   <App />,
