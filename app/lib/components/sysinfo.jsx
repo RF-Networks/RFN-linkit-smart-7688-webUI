@@ -102,6 +102,7 @@ class sysinfoComponent extends React.Component {
       errorMsg: null,
 	  boardMsgDialogShow: false,
 	  errorDialogShow: false,
+	  showModalFactoryReset: false,
     };
 
     this.state.PlatformBlockIsEdit = false;
@@ -126,7 +127,8 @@ class sysinfoComponent extends React.Component {
 	this._editPlatformBlock = this._editPlatformBlock.bind(this);
 	this._submitPlatformBlock = this._submitPlatformBlock.bind(this);
 	this._returnToIndex = this._returnToIndex.bind(this);
-
+	this._onFactorySubmit = this._onFactorySubmit.bind(this);
+	this._returnToSetPassword = this._returnToSetPassword.bind(this);
   }
 
   componentWillMount() {
@@ -328,6 +330,43 @@ class sysinfoComponent extends React.Component {
 			</Dialog>
             { PlatformBlock }
 			<div style={{ borderTop: '1px solid rgba(0,0,0,0.12)', marginTop: '20px', marginBottom: '0px' }}></div>
+			<div className={ classes.content } key="reset">
+			    <h3 className={ classes.h3 }>{__('Factory reset')}</h3>
+				<p style={{ marginBottom: '0px' }}>{__('Reset the device to its default settings.')}</p>
+				<b style={{ color: '#DB4437' }}>{__('Important: This action will remove all your data and settings from the device.')}</b>
+				<p>{ this.state.showModalFactoryReset }</p>
+				<Dialog open={this.state.showModalFactoryReset} aria-labelledby="simple-dialog-title">
+					<DialogTitle id="simple-dialog-title">{__('Are you sure you want to reset?')}</DialogTitle>
+					<DialogContent>
+						<DialogContentText style={{ color: '#999A94', marginTop: '0px' }}>
+							{__('This action will remove all your data and settings from the device. You cannot undo this action.')}
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+					    <Button onClick={() => this.setState({ showModalFactoryReset: false })}  color="primary">
+						  { __('Cancel') }
+						</Button>
+						<Button onClick={ this._onFactorySubmit } color="primary">
+						  { __('Reset') }
+						</Button>
+					</DialogActions>
+				</Dialog>
+				<Button onClick={() => this.setState({ showModalFactoryReset: true })} 
+						style={{
+							width: '100%',
+							textAlign: 'center',
+							marginTop: '-20px',
+							marginBottom: '20px',
+							color: '#ffffff',
+							backgroundColor: green[500],
+							'&:hover': {
+								backgroundColor: green[700],
+							},
+						}}				
+						color="primary">
+					{ __('Reset') }
+				</Button>
+			</div>
         </Card>
       </div>
     );
@@ -393,6 +432,51 @@ class sysinfoComponent extends React.Component {
 	  });
     }
 	return null;
+  }
+  
+  _onFactorySubmit() {
+	const this$ = this;
+	return AppActions.resetFactory(window.session) 
+	.then(() => {
+		this$.setState({ showModalFactoryReset: false });
+	})
+	.then(() => {
+      return this$._returnToSetPassword();
+    })
+	.catch((err) => {
+      if (err === 'Access denied') {
+        alert(err);
+        if (AppActions.isLocalStorageNameSupported) {
+          delete window.localStorage.session;
+          delete window.localStorage.info;
+        } else {
+          delete window.memoryStorage.session;
+          delete window.memoryStorage.info;
+        }
+        return AppDispatcher.dispatch({
+          APP_PAGE: 'LOGIN',
+          successMsg: null,
+          errorMsg: null,
+        });
+      }
+      alert(err + ' Please try again!');
+    });
+  }
+  
+  _returnToSetPassword() {
+    if (AppActions.isLocalStorageNameSupported) {
+      delete window.localStorage.session;
+      delete window.localStorage.info;
+    } else {
+      delete window.memoryStorage.session;
+      delete window.memoryStorage.info;
+    }
+
+    return AppDispatcher.dispatch({
+      APP_PAGE: 'FIRSTLOGIN',
+      successMsg: null,
+      errorMsg: null,
+    });
   }
 }
 

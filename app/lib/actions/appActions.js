@@ -183,6 +183,9 @@ const appActions = {
 	  return null;
     });
   },
+  resetFactory: (session) => {
+    return rpc.default.resetFactory(session);
+  },
   
   getQuery: (name) => {
     let match;

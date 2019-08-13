@@ -8,7 +8,7 @@ let id = 1;
 let RPCurl = '/ubus';
 
 if (window.location.hostname === '127.0.0.1') {
-  RPCurl = 'http://mylinkit.local/ubus';
+  RPCurl = 'http://mylinkit/ubus';
 }
 
 const rpcAPI = {
@@ -380,6 +380,17 @@ const rpcAPI = {
       id: id++,
       method: 'call',
       params: [session, 'uci', 'get', { config: 'wireless' }],
+    };
+
+    return this.request(config);
+  },
+  
+  resetFactory: function(session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [session, 'rpc-sys', 'factory', { dummy: 0}],
     };
 
     return this.request(config);

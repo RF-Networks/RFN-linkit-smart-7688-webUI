@@ -113,7 +113,7 @@ class loginComponent extends Component {
     }
 
     if (this.state.successMsg) {
-      this.refs.snackbar.open = true;
+      //this.refs.snackbar.open = true;
     }
 
     const this$ = this;
@@ -155,6 +155,7 @@ class loginComponent extends Component {
               position: 'relative',
             }}
             ref="snackbar"
+			open={this.state.successMsg}
             autoHideDuration={this.state.autoHideDuration}>
             <SnackbarContent message={ this.state.successMsg }/>
           </Snackbar>
