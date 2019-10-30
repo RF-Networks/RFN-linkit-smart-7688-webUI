@@ -17,7 +17,7 @@
     "connect-livereload": "~0.3.2",
     "del": "^1.1.1",
     "extract-text-webpack-plugin": "^0.5.0",
-    "eslint": "1.4.3",
+    "eslint": "6.6.0",
     "eslint-config-defaults": "6.0.0",
     "eslint-plugin-react": "3.3.2",
     "i18n": "^0.5.0",
