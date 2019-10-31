@@ -42,7 +42,10 @@ const appActions = {
 	return rpc.default.setLanMode(mode, session);
   },
   set3G: (apn, pincode, username, password, session) => {	
-	return rpc.default.set3G(apn, pincode, username, password, session);
+	return rpc.default.set3G(apn, pincode, username, password, session)
+	.then(() => {
+	  return rpc.default.uciCommit('network', session);
+	});
   },
   setWifi: (mode, content, session) => {	
 	if (mode === 'apsta') {

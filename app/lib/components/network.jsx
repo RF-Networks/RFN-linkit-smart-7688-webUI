@@ -850,6 +850,7 @@ class networkComponent extends React.Component {
 	.then(() => {
 		if (!this.state.cellularEnabled)
 		  return null;
+		console.log(this.state.cellularConfig);
 		return AppActions.set3G(this.state.cellularConfig.apn, this.state.cellularConfig.pincode, this.state.cellularConfig.username, this.state.cellularConfig.password, window.session);
 	})
 	.then(() => {

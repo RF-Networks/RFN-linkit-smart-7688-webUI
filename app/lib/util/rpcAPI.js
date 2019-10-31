@@ -222,6 +222,7 @@ const rpcAPI = {
 	return this.request(config);
   },
   set3G: function(apn, pincode, username, password, session) {
+	console.log("set3G: '%s' '%s' '%s' '%s' %s", apn, pincode, username, password, session);
 	const config = {
       jsonrpc: '2.0',
       id: id++,

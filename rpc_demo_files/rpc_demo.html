@@ -90,10 +90,43 @@ function rpc_setWifi(mode) {
 	});
 }
 
+function rpc_set3G() {
+	config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "uci", "set", 
+					{ config: 'network',
+					  section: '3G',
+					  values: {
+						apn: 'uinternet1',
+						pincode: '',
+						username: '',
+						password: '',
+					  }, 
+					}, 
+				], 
+			};
+	
+	config1 = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "uci", "commit", { config: "network" } ] };
+	do_ajax(config, function(reply) {
+		if (!reply.result || reply.result[0] != 0)
+			alert("failed to set 3G");
+		else
+			do_ajax(config1, function(reply) {
+				console.log(reply);
+				if (!reply.result || reply.result[0] != 0)
+					alert("failed to set 3G");
+				else
+					alert(reply.result);
+					
+			});
+	});
+}
+
 $(document).ready(function() {
   $("#BtnLogin").click(function() { rpc_login("root", $("#Password").val()); });
   $("#BtnPasswd").click(function() { rpc_passwd($("#NewPasswd").val()); });
   $("#BtnAP").click(function() { rpc_setWifi("ap"); });
+  $("#Btn3G").click(function() { rpc_set3G(); });
 });
 </script>
 
@@ -112,4 +145,7 @@ New Password <input type="input" id="NewPasswd">
 
 <h3> Test Wifi-Mode </h3>
 <input type="button" value="Set Wifi AP" id="BtnAP">
+
+<h3> Test 3G </h3>
+<input type="button" value="Set 3G" id="Btn3G">
 </body></html>
