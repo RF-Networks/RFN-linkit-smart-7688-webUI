@@ -160,7 +160,6 @@ class networkComponent extends React.Component {
 	const this$ = this;
 	AppActions.loadModel(window.session)
     .then((data) => {
-      JSON.stringify(data);
       return this$.setState({ boardModel: data.body.result[1].model });
     });
   }
