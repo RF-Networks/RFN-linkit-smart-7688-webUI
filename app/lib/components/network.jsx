@@ -160,6 +160,7 @@ class networkComponent extends React.Component {
 	const this$ = this;
 	AppActions.loadModel(window.session)
     .then((data) => {
+      JSON.stringify(data);
       return this$.setState({ boardModel: data.body.result[1].model });
     });
   }
@@ -789,7 +790,7 @@ class networkComponent extends React.Component {
 	const this$ = this;
 	return AppActions.scanWifi(window.session)
 	.then((data) => {
-	  let selectValue;
+	  let selectValue = 0;
 	  const staModeInfo = this$.state.staContent;
       const apstaModeInfo = this$.state.apstaContent;
 	  for (let i = 0; i < data.body.result[1].results.length; i++ ) {
@@ -803,7 +804,7 @@ class networkComponent extends React.Component {
           apstaModeInfo.encryption = data.body.result[1].results[i].encryption.enabled;
 		}
 	  }
-	  
+
 	  return this$.setState({
 		selectValue: selectValue,
         staContent: staModeInfo,
@@ -842,7 +843,7 @@ class networkComponent extends React.Component {
 		mode = 'lancli';
 		this.state.mode = 'ap';
 	} 
-	
+
 	return AppActions.setWifi(this.state.mode, this.state[ this.state.mode + 'Content'], window.session)
 	.then(() => {
 		return AppActions.setLinkitMode(mode, window.session);
@@ -856,6 +857,7 @@ class networkComponent extends React.Component {
 	.then(() => {
 		return AppActions.commitAndReboot(window.session)
 		.catch((err) => {
+          console.log(err);
           if (err === 'no data' || err.msg === 'no data') {
             return false;
           }

@@ -7,7 +7,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ISPRODUCTION = process.env.NODE_ENV === 'production';
 const languages = {
   'en': null,
-  'ru-ru': require('./locale/ru-ru'),
+  'ru-ru': require('./locale/ru-RU'),
 };
 
 module.exports = Object.keys(languages).map(function(language) {
