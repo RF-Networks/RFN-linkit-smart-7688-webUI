@@ -1,0 +1,151 @@
+<!-- saved from url=(0035)http://mylinkit.local/rpc_demo.html -->
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=Big5">
+<title>LinkIt Smart7688 RPC Example</title>
+<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+var UBUS_STATUS_OK = 0;
+var UBUS_STATUS_INVALID_COMMAND = 1;
+var UBUS_STATUS_INVALID_ARGUMENT = 2;
+var UBUS_STATUS_METHOD_NOT_FOUND = 3;
+var UBUS_STATUS_NOT_FOUND = 4;
+var UBUS_STATUS_NO_DATA = 5;
+var UBUS_STATUS_PERMISSION_DENIED = 6;
+var UBUS_STATUS_TIMEOUT = 7;
+var UBUS_STATUS_NOT_SUPPORTED = 8;
+var UBUS_STATUS_UNKNOWN_ERROR = 9;
+var UBUS_STATUS_CONNECTION_FAILED = 10;
+function do_ajax(data, success) {
+	$.ajax({
+		url: "http://mylinkit.local/ubus",
+		type: "post",
+		data: JSON.stringify(data),
+		success: function(reply) {
+			success(reply);
+		},
+	});
+}
+var id = 1;
+var session;
+
+function rpc_login(user, pass)
+{
+	var login = { "jsonrpc": "2.0", "id": id++, "method": "call",
+		"params": [ "00000000000000000000000000000000","session","login",{
+			"username":user,"password":pass,
+			}
+		]};
+	$("#Session").val("");
+	$("#fwSession").val("");
+	session = "";
+	do_ajax(login, function(reply) {
+		console.log(reply);
+		if (!reply.result || reply.result[0] != 0) {
+			alert("failed to login");
+			return;
+		}
+		session = reply.result[1].ubus_rpc_session;
+		var grant = { "jsonrpc": "2.0", "id": id++, "method": "call",
+				"params": [ session, "session", "grant",
+					{ "scope": "uci", "objects": [ [ "*", "read" ], [ "*", "write" ] ] }
+				]};
+		do_ajax(grant, function(reply) {
+            alert(JSON.stringify(reply));
+			if (!reply.result || reply.result[0] != 0) {
+				alert("failed to grant object permissions");
+				return;
+			}
+			$("#Session").val(session);
+			$("#fwSession").val(session);
+		});
+	});
+}
+
+function rpc_passwd(pass) {
+	config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "rpc-sys", "password_set", { "user": "root", "password": pass } ] };
+	do_ajax(config, function(reply) {
+		if (!reply.result || reply.result[0] != 0)
+			alert("failed to set password");
+		else
+			alert("password changed");
+	});
+}
+
+function rpc_setWifi(mode) {
+	//config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+	//		"params": [ session, "file", "exec", { "command": "wifi_mode", "params" : mode }  ] };
+	config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "file", "exec", { "command": "/usr/bin/wifi_mode", "params" : [ mode, "norestart" ] } ] };
+	do_ajax(config, function(reply) {
+		if (!reply.result || reply.result[0] != 0)
+			alert("failed to set mode");
+		else
+			alert(reply.result);
+			
+	});
+}
+
+function rpc_set3G() {
+	config = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "uci", "set", 
+					{ config: 'network',
+					  section: '3G',
+					  values: {
+						apn: 'uinternet1',
+						pincode: '',
+						username: '',
+						password: '',
+					  }, 
+					}, 
+				], 
+			};
+	
+	config1 = { "jsonrpc": "2.0", "id": id++, "method": "call",
+			"params": [ session, "uci", "commit", { config: "network" } ] };
+	do_ajax(config, function(reply) {
+		if (!reply.result || reply.result[0] != 0)
+			alert("failed to set 3G");
+		else
+			do_ajax(config1, function(reply) {
+				console.log(reply);
+				if (!reply.result || reply.result[0] != 0)
+					alert("failed to set 3G");
+				else
+					alert(reply.result);
+					
+			});
+	});
+}
+
+$(document).ready(function() {
+  $("#BtnLogin").click(function() { rpc_login("root", $("#Password").val()); });
+  $("#BtnPasswd").click(function() { rpc_passwd($("#NewPasswd").val()); });
+  $("#BtnAP").click(function() { rpc_setWifi("ap"); });
+  $("#Btn3G").click(function() { rpc_set3G(); });
+});
+</script>
+
+<h3> Login </h3>
+Password <input type="input" id="Password">
+<input type="button" value="Login" id="BtnLogin"><br>
+<input type="button" value="Logout" id="BtnLogout"><br>
+Session ID <input type="input" readonly="" id="Session"><br>
+<br><br>
+
+
+<h3> Change Password </h3>
+New Password <input type="input" id="NewPasswd">
+<input type="button" value="Change" id="BtnPasswd">
+<br><br>
+
+<h3> Test Wifi-Mode </h3>
+<input type="button" value="Set Wifi AP" id="BtnAP">
+
+<h3> Test 3G </h3>
+<input type="button" value="Set 3G" id="Btn3G">
+</body></html>

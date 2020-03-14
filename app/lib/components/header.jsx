@@ -1,0 +1,159 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Radium from 'radium';
+import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Logo from '../../img/rf-networks.png';
+import AppActions from '../actions/appActions';
+import AppDispatcher from '../dispatcher/appDispatcher';
+
+const styles = theme => ({
+  img: {
+    width: '188px',
+    marginTop: '15px',
+  },
+  
+  header: {
+    width: '100%',
+    height: '120px',
+    boxSizing: 'border-box',
+    tapHighlightColor: 'rgba(0,0,0,0)',
+    zIndex: 99,
+    position: 'fixed',
+    background: '#fff',
+    boxShadow: '1px 2px 1px 0 rgba(0,0,0,0.1), 0 0 0 rgba(0,0,0,0.1)',
+  },
+  
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: '105px',
+    lineHeight: '60px',
+    justifyContent: 'space-between',
+    maxWidth: '800px',
+    margin: '0 auto',
+    '@media (max-width: 790px)': {
+      paddingLeft: '10px',
+      paddingRight: '10px',
+    },
+  },
+    
+  dropdown: {
+    borderBottom: '0px', 
+    '&:before': {
+      backgroundColor: '#fff',
+    },
+    '&:after': {
+      backgroundColor: '#fff',
+    },
+    color: green[500]
+  },
+
+  icon: {
+    fill: green[500],
+  },
+});
+
+@Radium
+class loginComponent extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    boardInfo: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    children: PropTypes.node,
+  }
+  
+  constructor(props) {
+	super(props);  
+	this.classes = props;
+	this.state = {};
+	this._logOut = this._logOut.bind(this);
+	
+	if (/ru\-ru/.test(window.location.pathname)) {
+	  this.state.language = '1';
+    } else {
+	  this.state.language = '0';
+	}
+  }
+  
+  componentDidMount() {
+  
+  }
+  
+  render() {
+	const { classes } = this.props;
+	let defaultRouter = '';
+	
+	if (/127.0.0.1/.test(window.location.host)) {
+	  defaultRouter = '/app';	
+	}
+	
+	return(
+	  <div>
+	    <header className={ classes.header }>
+		  <div className={ classes.container }>
+		    <img className={ classes.img } src={ Logo }/>
+			<Select
+			  value={ this.state.language }
+			  inputProps={{
+				classes: {
+				  root: classes.dropdown,
+				  icon: classes.icon,
+				},					
+			  }}
+			  onChange={
+				e => {
+				  if (e.target.value == this.state.language)
+					return;
+				  switch (e.target.value) {
+					case 1:
+					  window.location.href = defaultRouter + '/ru-ru.html';
+					  break;
+					default:
+					  window.location.href = defaultRouter + '/';
+					  break;
+				  }
+				}					
+			  }
+			  disableUnderline={true}>
+			  <MenuItem value={0} style={{backgroundColor: '#fff', color: green[500]}}>English</MenuItem>
+			  <MenuItem value={1} style={{backgroundColor: '#fff', color: green[500]}}>Pусский</MenuItem>
+			</Select>
+			<a
+			  onClick={ this._logOut }
+			  style={{
+				color: green[500],  
+				textDecoration: 'none',
+				cursor: 'pointer',
+				margin: '22px 30px',
+			  }}>
+			  { __('Sign out') }</a>
+		  </div>
+		</header>
+	  </div>
+	);  
+  }
+  
+  _logOut() {
+    if (AppActions.isLocalStorageNameSupported) {
+      delete window.localStorage.info;
+      delete window.localStorage.session;
+    } else {
+      delete window.memoryStorage.session;
+      delete window.memoryStorage.info;
+    }
+    window.session = '';
+    return AppDispatcher.dispatch({
+      APP_PAGE: 'LOGIN',
+      successMsg: null,
+      errorMsg: null,
+    });
+  }
+}
+
+loginComponent.childContextTypes = {
+  classes: PropTypes.object,
+};
+
+export default withStyles(styles, { withTheme: true })(loginComponent);
