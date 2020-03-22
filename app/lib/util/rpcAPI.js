@@ -99,6 +99,27 @@ const rpcAPI = {
     return this.request(config);
   },
   
+  commitWifi: function(session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [session, 'uci', 'apply', { commit: true }]};
+
+    return this.request(config);
+  },
+  
+  reboot: function(session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [session, 'rpc-sys', 'reboot', { dummy: 0}],
+    };
+
+    return this.request(config);
+  },
+  
   resetPassword: function(user, password, session) {
     console.log("resetPassword %s %s %s", user, password, session);
     const config = {

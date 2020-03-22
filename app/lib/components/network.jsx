@@ -251,10 +251,10 @@ class networkComponent extends React.Component {
 		  <br/>
 		  <TextField 
 		    type="text"
-			helperText={ __('Username') }
+			helperText={ __('username') }
 			style={{ width: '100%' }}
 			required 
-			label={ __('Username') }
+			label={ __('username') }
 			value={ this.state.cellularConfig.username || '' }
 			onChange={
               (e) => {
@@ -840,18 +840,15 @@ class networkComponent extends React.Component {
 	
 	return AppActions.setWifi(this.state.mode, this.state[ this.state.mode + 'Content'], window.session)
 	.then(() => {
-	  console.log("1");	
 	  return AppActions.setLinkitMode(mode, window.session);	
 	})
 	.then(() => {
-	  console.log("2");
 	  if (!this.state.cellularEnabled)
 		return null;
 	  console.log(this.state.cellularConfig);
 	  return AppActions.set3G(this.state.cellularConfig.apn, this.state.cellularConfig.pincode, this.state.cellularConfig.username, this.state.cellularConfig.password, window.session);
 	})
 	.then(() => {
-	  console.log("3");	
 	  return AppActions.commitAndReboot(window.session)
 		.catch((err) => {
 		  console.log(err);

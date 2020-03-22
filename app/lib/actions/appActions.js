@@ -20,6 +20,16 @@ let isLocalStorageNameSupported = false;
 const appActions = {
   isLocalStorageNameSupported: isLocalStorageNameSupported,	
   
+  commitAndReboot: (session) => {
+    return rpc.default.commitWifi(session)
+    .then(() => {
+      return rpc.default.reboot(session);
+    })
+    .catch(() => {
+      return rpc.default.reboot(session);
+    });
+  },
+  
   loadModel: (session) => {
     return rpc.default.loadModel(session);
   },

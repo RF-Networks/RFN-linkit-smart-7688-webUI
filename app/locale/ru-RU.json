@@ -86,5 +86,8 @@
   "Server port": "Порт сервера",
   "Configuration saved.": "Настройки сохранены.",
   "Device settings": "Настройки устройства",
-  "Channel": "Канал"
+  "Channel": "Канал",
+  "Repeater SSID": "Repeater SSID",
+  "Repeater password": "Repeater password",
+  "Repeater mode": "Repeater mode"
 }

@@ -81,7 +81,9 @@ function rpc_setWifi(mode) {
 	//		"params": [ session, "file", "exec", { "command": "wifi_mode", "params" : mode }  ] };
 	config = { "jsonrpc": "2.0", "id": id++, "method": "call",
 			"params": [ session, "file", "exec", { "command": "/usr/bin/wifi_mode", "params" : [ mode, "norestart" ] } ] };
+	console.log(config);
 	do_ajax(config, function(reply) {
+		console.log(reply);
 		if (!reply.result || reply.result[0] != 0)
 			alert("failed to set mode");
 		else
