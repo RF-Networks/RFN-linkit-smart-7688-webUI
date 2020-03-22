@@ -148,6 +148,13 @@ const appActions = {
   setLinkitMode: (mode, session) => {
 	return rpc.default.setLinkitMode(mode, session);
   },
+  
+  set3G: (apn, pincode, username, password, session) => {	
+	return rpc.default.set3G(apn, pincode, username, password, session)
+	.then(() => {
+	  return rpc.default.uciCommit('network', session);
+	});
+  },
 };
 
 export default appActions;
