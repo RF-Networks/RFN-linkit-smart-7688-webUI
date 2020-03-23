@@ -155,6 +155,13 @@ const appActions = {
 	  return rpc.default.uciCommit('network', session);
 	});
   },
+  
+  set4G: (apn, pincode, username, password, session) => {	
+	return rpc.default.set4G(apn, pincode, username, password, session)
+	.then(() => {
+	  return rpc.default.uciCommit('network', session);
+	});
+  },
 };
 
 export default appActions;

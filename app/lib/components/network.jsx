@@ -64,7 +64,7 @@ class networkComponent extends React.Component {
 	  lanmode: (this.props.boardInfo.lan.proto === 'static')? 'ap' : 'sta',
 	  boardMsgDialogShow: false,
 	  errorDialogShow: false,
-	  cellularEnabled: false,
+	  cellularEnabled: 0,
 	  cellularPasswordShow: false,	
 	};
 	
@@ -87,8 +87,14 @@ class networkComponent extends React.Component {
 	  };
 	}
 	
-	this.state.cellularEnabled = (this.props.boardInfo.network['3G'] !== undefined);
-	this.state.cellularConfig = this.props.boardInfo.network['3G'];
+	if (this.props.boardInfo.network['3G'] !== undefined) {
+		this.state.cellularEnabled = 1;
+		this.state.cellularConfig = this.props.boardInfo.network['3G'];
+	} else if (this.props.boardInfo.network['4G'] !== undefined) {
+		this.state.cellularEnabled = 2;
+		this.state.cellularConfig = this.props.boardInfo.network['4G'];
+	}
+	
 	
 	if (this.state.cellularConfig !== undefined) {
 	  if (this.state.cellularConfig.pincode === undefined)
@@ -204,7 +210,7 @@ class networkComponent extends React.Component {
 	  boardImg = icon7688Duo;
 	}
 	
-	if (this.state.cellularEnabled) {
+	if (this.state.cellularEnabled > 0) {
 	  cellularElem = (
 	    <div>
 		  <br/>
@@ -843,10 +849,12 @@ class networkComponent extends React.Component {
 	  return AppActions.setLinkitMode(mode, window.session);	
 	})
 	.then(() => {
-	  if (!this.state.cellularEnabled)
-		return null;
-	  console.log(this.state.cellularConfig);
-	  return AppActions.set3G(this.state.cellularConfig.apn, this.state.cellularConfig.pincode, this.state.cellularConfig.username, this.state.cellularConfig.password, window.session);
+	  if (this.state.cellularEnabled == 1) {
+		return AppActions.set3G(this.state.cellularConfig.apn, this.state.cellularConfig.pincode, this.state.cellularConfig.username, this.state.cellularConfig.password, window.session);
+	  } else if (this.state.cellularEnabled == 2) {
+		return AppActions.set4G(this.state.cellularConfig.apn, this.state.cellularConfig.pincode, this.state.cellularConfig.username, this.state.cellularConfig.password, window.session);
+	  }
+	  return null;
 	})
 	.then(() => {
 	  return AppActions.commitAndReboot(window.session)

@@ -224,6 +224,32 @@ const rpcAPI = {
     return this.request(config);
   },
   
+  set4G: function(apn, pincode, username, password, session) {
+	console.log("set4G: '%s' '%s' '%s' '%s' %s", apn, pincode, username, password, session);
+	const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [
+        session,
+        'uci',
+        'set',
+        {
+          config: 'network',
+          section: '4G',
+          values: {
+            apn: apn,
+            pincode: pincode,
+			username: username,
+            password: password,
+          },
+        },
+      ],
+    };
+
+    return this.request(config);
+  },
+  
   uciCommit: function(uciConfig, session) {
     const config = {
       jsonrpc: '2.0',
