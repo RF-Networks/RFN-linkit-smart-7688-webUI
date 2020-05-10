@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Sysinfo from './sysinfo.jsx';
 import Network from './network.jsx';
+import RFNetwork from './rfn.jsx';
 import Typography from '@material-ui/core/Typography';
 import AppActions from '../actions/appActions';
 
@@ -103,8 +104,8 @@ class contentComponent extends React.Component {
   
   render() {
 	const { classes } = this.props;  
-	let configTag = '';//<Tab label={ __('Configuration') } value={2} fullWidth/>
-	
+	let configTag = (this.props.boardInfo.rfn !== undefined)? <Tab label={ __('Configuration') } value={2} fullWidth/> : "";
+
 	return(
 	  <div key="mainBlock" className={ classes.block }>
 	    <header className={ classes.header }>
@@ -134,6 +135,7 @@ class contentComponent extends React.Component {
 		  </Tabs>
 		  {this.state.tabsValue === 0 && <TabContainer><Sysinfo boardInfo={ this.props.boardInfo } /></TabContainer>}
 		  {this.state.tabsValue === 1 && <TabContainer><Network boardInfo={ this.props.boardInfo } /></TabContainer>}
+		  {this.state.tabsValue === 2 && <TabContainer><RFNetwork boardInfo={ this.props.boardInfo } /></TabContainer>}
 		</AppBar>
 	  </div>
 	);  

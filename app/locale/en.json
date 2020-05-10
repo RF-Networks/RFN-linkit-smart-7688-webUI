@@ -86,7 +86,21 @@
   "Configuration saved.": "Configuration saved.",
   "Device settings": "Device settings",
   "Channel": "Channel",
+  "Advertising Channel": "Advertising Channel",
   "Repeater SSID": "Repeater SSID",
   "Repeater password": "Repeater password",
-  "Repeater mode": "Repeater mode"
+  "Repeater mode": "Repeater mode",
+  "Device imei": "IMEI",
+  "Reboot after": "Reboot after N failures",
+  "Socket inactive timeout": "Connection inactivity timeout (min)",
+  "Mode": "Mode",
+  "Connection settings": "Connection settings",
+  "Cloud URL": "Cloud URL",
+  "Application ID": "Application ID",
+  "Token": "Token",
+  "Mesh settings": "Mesh settings",
+  "Sync Word": "Sync Word",
+  "Base Time": "Base Time (ms)",
+  "Frames In Cycle": "Frames In Cycle",
+  "Network ID": "Network ID"
 }

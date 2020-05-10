@@ -101,6 +101,17 @@ const appActions = {
     return rpc.default.loadSystem(session);
   },
   
+  loadRFN: (session) => {
+    return rpc.default.loadRFN(session);
+  },
+  
+  setRFN: (params, session) => {
+	return rpc.default.setRFN(params, session)
+	.then(() => {
+	  return rpc.default.uciCommit('rfn', session);	
+	});
+  },
+  
   initialFetchData: (session) => {
 	return promise.delay(10).then(() => {
       return [
@@ -109,15 +120,17 @@ const appActions = {
         rpc.default.loadNetwork(session),
 		rpc.default.loadNetstate('lan', session),
 		rpc.default.loadNetstate('wan', session),
+		rpc.default.loadRFN(session),
       ];
     })
-    .spread((system, wifi, network, lan, wan) => {
+    .spread((system, wifi, network, lan, wan, rfn) => {
       const boardInfo = {};
       boardInfo.system = system.body.result[1].values;
 	  boardInfo.wifi = wifi.body.result[1].values;
       boardInfo.network = network.body.result[1].values;
 	  boardInfo.lan = lan.body.result[1];
 	  boardInfo.wan = wan.body.result[1];
+	  boardInfo.rfn = rfn.body.result[1].values;
       return boardInfo;
     })
     .then((boardInfo) => {

@@ -198,6 +198,36 @@ const rpcAPI = {
     return this.request(config);
   },
   
+  loadRFN: function(session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [session, 'uci', 'get', { config: 'rfn' }],
+    };
+
+    return this.request(config);
+  },
+  
+  setRFN: function(params, session) {
+	const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [
+        session,
+        'uci',
+        'set', {
+          config: 'rfn',
+          section: 'server',
+          values: params,
+        },
+      ],
+    };
+
+    return this.request(config);  
+  },
+  
   set3G: function(apn, pincode, username, password, session) {
 	console.log("set3G: '%s' '%s' '%s' '%s' %s", apn, pincode, username, password, session);
 	const config = {
