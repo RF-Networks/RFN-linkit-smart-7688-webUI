@@ -102,5 +102,9 @@
   "Sync Word": "Sync Word",
   "Base Time": "Base Time (ms)",
   "Frames In Cycle": "Frames In Cycle",
-  "Network ID": "Network ID"
+  "Network ID": "Network ID",
+  "Upload": "Upload",
+  "Trust Store Certificate": "Trust Store Certificate",
+  "Key Store Certificate": "Key Store Certificate",
+  "Private Key Certificate": "Private Key Certificate"
 }

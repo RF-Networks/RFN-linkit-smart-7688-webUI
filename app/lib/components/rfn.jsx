@@ -17,6 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import {DropzoneDialog} from 'material-ui-dropzone';
 import AppActions from '../actions/appActions';
 import AppDispatcher from '../dispatcher/appDispatcher';
 import validator from 'validator';
@@ -116,7 +117,8 @@ class rfnComponent extends React.Component {
 	this.state = {
 	  errorMsgTitle: null,
 	  errorMsg: null,
-	  
+	  filedialogopen: false,
+	  awsfilename: '',
 	  rfn: this.props.boardInfo.rfn || '',
 	};
 	
@@ -250,6 +252,29 @@ class rfnComponent extends React.Component {
 		    <br/>
 		  </div>
 		);		
+	  } else if (parseInt(this.state.rfn.server.mode) == 4) {
+		serverParams = (
+		  <div>
+		    <TextField 
+			  type="text"
+			  helperText={ __('Cloud URL') }
+			  style={{ width: '100%' }}
+			  required 
+			  label={ __('Cloud URL') }
+			  defaultValue={ this.state.rfn.server.awscloudurl || 'iot.eu-central-1.amazonaws.com' }
+			  onChange={
+				(e) => {
+				  if(validator.isURL(e.target.value)) {  
+					this.state.rfn.server.awscloudurl = e.target.value;  
+					this.setState({ rfn: this.state.rfn });
+				  }
+				}	
+			  }
+			  variant="outlined"/>
+		    <br/>
+		    <br/>
+		  </div>
+	    );
 	  }
 		
 	  DeviceSettingsBlock = (
@@ -300,7 +325,8 @@ class rfnComponent extends React.Component {
 				<MenuItem key={0} value={0} style={{ maxHeight: '100px' }}>Standard</MenuItem>
 				<MenuItem key={1} value={1} style={{ maxHeight: '100px' }}>Transparent</MenuItem>
 				<MenuItem key={2} value={2} style={{ maxHeight: '100px' }}>Bridge</MenuItem>
-				<MenuItem key={3} value={3} style={{ maxHeight: '100px' }}>DeviceWise (Telit Cloud)</MenuItem>			
+				<MenuItem key={3} value={3} style={{ maxHeight: '100px' }}>DeviceWise (Telit Cloud)</MenuItem>	
+				<MenuItem key={4} value={4} style={{ maxHeight: '100px' }}>AWS (Amazon Iot Cloud)</MenuItem>					
 			  </Select>
 		  </FormControl>
 		  <br/>
@@ -517,6 +543,95 @@ class rfnComponent extends React.Component {
 			  </div>
 			);
 			break;
+		  case 4:
+			workingMode = 'AWS (Amazon IoT Cloud)';
+			serverParams = (
+			  <div>
+				<h3 className={ classes.panelTitle }>{ __('Cloud URL') }</h3>
+				<p className={ classes.panelContent }>{ this.state.rfn.server.awscloudurl }</p>
+				<DropzoneDialog
+					open={this.state.filedialogopen}
+					acceptedFiles={[]}
+					showPreviews={false}
+					maxFileSize={3000}
+					onClose={()=>{this.setState({ filedialogopen: false });}}
+					onSave={(e)=>{ 
+					  return AppActions.uploadFile(e[0], this.state.awsfilename, window.session)
+					  .then(() => {
+						this.setState({ filedialogopen: false });  
+					  })
+					  .catch((err) => {
+						  this.setState({ filedialogopen: false });
+						  if (err === 'Access denied') {
+						  }
+						  alert(err);
+					  });
+					}}
+				/>
+				
+				<h4 className={ classes.panelTitle }>{ __('Trust Store Certificate') }</h4>
+				<Button
+				  style={{
+					width: '100px',
+					flexGrow: 1,
+					textAlign: 'center',
+					marginTop: '20px',
+					marginBottom: '20px',
+					marginLeft: '10px',
+					color: '#ffffff',
+					backgroundColor: green[500],
+					'&:hover': {
+					  backgroundColor: green[700],  
+					},
+				  }}
+				  onClick={ () => { 
+					this.setState({awsfilename: '/root/aws.ca' , filedialogopen: true});  
+				  } }>
+				  { __('Upload') }
+				</Button>
+				<h4 className={ classes.panelTitle }>{ __('Key Store Certificate') }</h4>
+				<Button
+				  style={{
+					width: '100px',
+					flexGrow: 1,
+					textAlign: 'center',
+					marginTop: '20px',
+					marginBottom: '20px',
+					marginLeft: '10px',
+					color: '#ffffff',
+					backgroundColor: green[500],
+					'&:hover': {
+					  backgroundColor: green[700],  
+					},
+				  }}
+				  onClick={ () => { 
+					this.setState({awsfilename: '/root/aws.crt' , filedialogopen: true});  
+				  } }>
+				  { __('Upload') }
+				</Button>
+				<h4 className={ classes.panelTitle }>{ __('Private Key Certificate') }</h4>
+				<Button
+				  style={{
+					width: '100px',
+					flexGrow: 1,
+					textAlign: 'center',
+					marginTop: '20px',
+					marginBottom: '20px',
+					marginLeft: '10px',
+					color: '#ffffff',
+					backgroundColor: green[500],
+					'&:hover': {
+					  backgroundColor: green[700],  
+					},
+				  }}
+				  onClick={ () => { 
+					this.setState({awsfilename: '/root/aws.key' , filedialogopen: true});  
+				  } }>
+				  { __('Upload') }
+				</Button>
+			  </div>
+			);
+			break;
 		}
 		
 		DeviceSettingsBlock = (
@@ -595,6 +710,7 @@ class rfnComponent extends React.Component {
 		serverIP: this$.state.rfn.server.serverIP,
 		serverPort: this$.state.rfn.server.serverPort,
 		cloudurl: this$.state.rfn.server.cloudurl,
+		awscloudurl: this$.state.rfn.server.awscloudurl,
 		appid: this$.state.rfn.server.appid,
 		token: this$.state.rfn.server.token,
 		channel: this$.state.rfn.server.channel,

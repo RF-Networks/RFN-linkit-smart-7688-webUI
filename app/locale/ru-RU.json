@@ -103,5 +103,9 @@
   "Sync Word": "Слово синхронизации",
   "Base Time": "Базовое время (ms)",
   "Frames In Cycle": "Кол-во окон в цикле",
-  "Network ID": "ID сети"
+  "Network ID": "ID сети",
+  "Upload": "Загрузить",
+  "Trust Store Certificate": "Trust Store Сертификат",
+  "Key Store Certificate": "Сертификат Хранилища ключей",
+  "Private Key Certificate": "Сертификат личного ключа"
 }

@@ -175,6 +175,10 @@ const appActions = {
 	  return rpc.default.uciCommit('network', session);
 	});
   },
+  
+  uploadFile: (file, store_path, session) => {
+	return rpc.default.uploadFile(file, store_path, session);
+  },
 };
 
 export default appActions;

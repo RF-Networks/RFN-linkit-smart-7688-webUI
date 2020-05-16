@@ -342,6 +342,26 @@ const rpcAPI = {
 	};
 	return this.request(config);
   },
+  
+  uploadFile: function(file, store_path, session) {
+	const uploadUrl = RPCurl.replace('/ubus', '/cgi-bin/cgi-upload');
+	return new Promise((resolve, reject) => {
+	  request
+		.post(uploadUrl)
+		.field('sessionid', session)
+		.field('filemode', '0600')
+		.field('filename', store_path)
+		.attach('filedata', file, file.name)
+		.end((err, res) => {
+			console.log(res);
+			console.log(err);
+			if (!res.ok) {
+			  return reject('Connection failed');
+			}
+			return resolve(res);
+		});
+	});
+  },
 };
 
 export default rpcAPI;
