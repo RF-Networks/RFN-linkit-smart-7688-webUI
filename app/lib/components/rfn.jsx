@@ -17,6 +17,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
 import {DropzoneDialog} from 'material-ui-dropzone';
 import AppActions from '../actions/appActions';
 import AppDispatcher from '../dispatcher/appDispatcher';
@@ -312,6 +314,30 @@ class rfnComponent extends React.Component {
 			  }	
 			}
 			variant="outlined"/>
+		  <br/>
+		  <br/>
+		  <Typography id="acc-sens-title" gutterBottom>
+			{ __('Accelerometer sensitivity') }
+		  </Typography>
+		  <Slider aria-labelledby="acc-sens-title" valueLabelDisplay="auto" min={0} max={127} value={ parseInt(this.state.rfn.server.accsens) } onChange={(event, newValue) => {
+			this.state.rfn.server.accsens = newValue;  
+			this.setState({ rfn: this.state.rfn });}}/>
+		  <br/>
+		  <br/>
+		  <Typography id="gps-period-title" gutterBottom>
+			{ __('GPS period') }
+		  </Typography>
+		  <Slider aria-labelledby="gps-period-title" valueLabelDisplay="auto" min={0} max={86400} value={ parseInt(this.state.rfn.server.gpsperiod) } onChange={(event, newValue) => {
+			this.state.rfn.server.gpsperiod = newValue;  
+			this.setState({ rfn: this.state.rfn });}}/>
+		  <br/>
+		  <br/>
+		  <Typography id="gps-threshold-title" gutterBottom>
+			{ __('GPS threshold') }
+		  </Typography>
+		  <Slider aria-labelledby="gps-threshold-title" valueLabelDisplay="auto" min={0} max={180} value={ parseInt(this.state.rfn.server.gpsthreshold) } onChange={(event, newValue) => {
+			this.state.rfn.server.gpsthreshold = newValue;  
+			this.setState({ rfn: this.state.rfn });}}/>
 		  <br/>
 		  <br/>
 		  <FormControl className={ classes.formControl }>
@@ -643,6 +669,12 @@ class rfnComponent extends React.Component {
 			<p className={ classes.panelContent }>{ this.state.rfn.server.rebootAfter }</p>
 			<h3 className={ classes.panelTitle }>{ __('Socket inactive timeout') }</h3>
 			<p className={ classes.panelContent }>{ this.state.rfn.server.socketIdleInterval }</p>
+			<h3 className={ classes.panelTitle }>{ __('Accelerometer sensitivity') }</h3>
+			<Slider valueLabelDisplay="on" min={0} max={127} disabled={true} value={ parseInt(this.state.rfn.server.accsens) } />
+			<h3 className={ classes.panelTitle }>{ __('GPS period') }</h3>
+			<Slider valueLabelDisplay="on" min={0} max={86400} disabled={true} value={ parseInt(this.state.rfn.server.gpsperiod) } />
+			<h3 className={ classes.panelTitle }>{ __('GPS threshold') }</h3>
+			<Slider valueLabelDisplay="on" min={0} max={180} disabled={true} value={ parseInt(this.state.rfn.server.gpsthreshold) } />
 			<h3 className={ classes.panelTitle }>{ __('Mode') }</h3>
 			<p className={ classes.panelContent }>{ workingMode }</p>
 			<h4>{ __('Connection settings') }</h4>

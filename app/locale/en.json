@@ -106,5 +106,8 @@
   "Upload": "Upload",
   "Trust Store Certificate": "Trust Store Certificate",
   "Key Store Certificate": "Key Store Certificate",
-  "Private Key Certificate": "Private Key Certificate"
+  "Private Key Certificate": "Private Key Certificate",
+  "Accelerometer sensitivity": "Accelerometer sensitivity",
+  "GPS period": "GPS period (seconds)",
+  "GPS threshold": "GPS event threshold (seconds)"
 }

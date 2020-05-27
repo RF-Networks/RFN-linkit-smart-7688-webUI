@@ -120,7 +120,7 @@ const appActions = {
         rpc.default.loadNetwork(session),
 		rpc.default.loadNetstate('lan', session),
 		rpc.default.loadNetstate('wan', session),
-		rpc.default.loadRFN(session),
+		rpc.default.loadRFN(session).catch((err) => { return null; }),
       ];
     })
     .spread((system, wifi, network, lan, wan, rfn) => {
@@ -130,7 +130,7 @@ const appActions = {
       boardInfo.network = network.body.result[1].values;
 	  boardInfo.lan = lan.body.result[1];
 	  boardInfo.wan = wan.body.result[1];
-	  boardInfo.rfn = rfn.body.result[1].values;
+	  boardInfo.rfn = rfn?.body.result[1].values;
       return boardInfo;
     })
     .then((boardInfo) => {

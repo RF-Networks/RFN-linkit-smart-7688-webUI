@@ -107,5 +107,8 @@
   "Upload": "Загрузить",
   "Trust Store Certificate": "Trust Store Сертификат",
   "Key Store Certificate": "Сертификат Хранилища ключей",
-  "Private Key Certificate": "Сертификат личного ключа"
+  "Private Key Certificate": "Сертификат личного ключа",
+  "Accelerometer sensitivity": "Чувствительность аксселерометра",
+  "GPS period": "Частота GPS (секунды)",
+  "GPS threshold": "Порог GPS события (секунды)"
 }
