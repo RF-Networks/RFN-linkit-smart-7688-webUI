@@ -140,6 +140,17 @@ const rpcAPI = {
     return this.request(config);
   },
   
+  resetFactory: function(session) {
+    const config = {
+      jsonrpc: '2.0',
+      id: id++,
+      method: 'call',
+      params: [session, 'rpc-sys', 'factory', { dummy: 0}],
+    };
+
+    return this.request(config);
+  },
+  
   loadNetstate: function(iface, session) {
     const config = {
       jsonrpc: '2.0',

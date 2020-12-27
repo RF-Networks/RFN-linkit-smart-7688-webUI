@@ -144,6 +144,10 @@ const appActions = {
     });  
   },
   
+  resetFactory: (session) => {
+    return rpc.default.resetFactory(session);
+  },
+  
   scanWifi: (session) => {
     return rpc.default.scanWifi(session);
   },
